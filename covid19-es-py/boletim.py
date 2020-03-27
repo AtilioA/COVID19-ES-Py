@@ -3,6 +3,8 @@ import unicodedata
 import requests
 import configparser
 from bs4 import BeautifulSoup
+from utils import remove_acentos
+
 config = configparser.ConfigParser()
 
 # Produz registros
@@ -110,7 +112,25 @@ class Boletim():
 
         self.nMunicipiosInfectados = len(tabela[1:-1])
 
+    def pesquisa_casos_municipio(self, municipio):
+        stringMunicipioTratada = remove_acentos(municipio).lower().strip()
+        stringsMunicipiosTratadas = list(
+            map(lambda string: remove_acentos(string).lower().strip(), self.casos.keys()))
+        try:
+            indiceMunicipio = stringsMunicipiosTratadas.index(
+                stringMunicipioTratada)
+        except ValueError:  # O município não foi encontrado
+            mainLogger.error(
+                f"Município {municipio} não encontrado no boletim.")
+            return "Município não encontrado no município. Pode ter ocorrido um erro de digitação ou o município não registrou casos de COVID-19."
+        else:
+            municipio = list(self.casos.keys())[indiceMunicipio]
+            return self.casos[municipio]
+
 
 if __name__ == "__main__":
+    boletim = Boletim(
+        "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-28o-boletim-de-covid-19")
+    print(boletim.pesquisa_casos_municipio(" IBIRAÇU   "))
     scraper = ScraperBoletim()
     print(scraper.extrai_todos_boletins())

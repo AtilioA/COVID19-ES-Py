@@ -1,0 +1,2 @@
+class BoletimError(Exception):
+    pass

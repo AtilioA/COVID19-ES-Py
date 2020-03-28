@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 .vscode/
+ignore/
 27th*

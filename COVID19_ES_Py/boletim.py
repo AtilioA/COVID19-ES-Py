@@ -4,11 +4,11 @@ import unicodedata
 import requests
 import configparser
 from bs4 import BeautifulSoup
-from utils import remove_acentos
-from exceptions import BoletimError
+from .utils import remove_acentos
+from .exceptions import BoletimError
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('./config.ini')
 
 # Produz registros
 logging.basicConfig(format='%(asctime)s %(message)s',
@@ -258,4 +258,5 @@ if __name__ == '__main__':
 
     # Carregando objeto Boletim com último boletim emitido
     boletim = scraper.carrega_ultimo_boletim()
-    # print(boletim.casos)
+    print(boletim.casos)
+    print(boletim.nMunicipiosInfectados)

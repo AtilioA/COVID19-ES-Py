@@ -9,12 +9,12 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="covid19-es-py",
-    version="1.0.0",
-    description="Scraper de casos de COVID-19 no Espírito Santo",
+    name="COVID19-ES-Py",
+    version="1.0.1",
+    description="Scraper de casos de COVID-19 no Espírito Santo.",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/atilioa/covid19-es-py",
+    url="https://github.com/atilioa/COVID19-ES-Py",
     author="Atílio Antônio",
     author_email="atiliodadalto@protonmail.com",
     license="GLP-3",
@@ -23,7 +23,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=["covid19-es-py"],
+    packages=["COVID19_ES_Py"],
     include_package_data=True,
     install_requires=["beautifulsoup4", "requests"]
 )

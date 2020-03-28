@@ -1,7 +1,7 @@
 <h1 align="center">
   <br>
   <a href="https://pypi.org/project/pycep-correios/">
-  <img src="docs/logo_COVID19-ES-Py.png" width="30%"></a>
+  <img src="https://raw.githubusercontent.com/AtilioA/COVID19-ES-Py/5c84a08be8a32a7f2850b591fbf1b4664779f51a/docs/logo_COVID19-ES-Py.png" width="40%"></a>
   <br>
   COVID19-ES-Py
   <br>
@@ -18,18 +18,23 @@
 </p>
 
 # Recursos
-* Extrai URLs de boletins emitidos pelo Governo do Estado do Espírito Santo;
-* Coleta números de casos dos boletins;
-* Possibilita pesquisa de casos por município.
+* Extrai URLs de boletins emitidos pelo Governo do Estado do Espírito Santo
+* Coleta números de casos dos boletins
+* Possibilita pesquisa de casos por município
 
-# Instalação
+# Instalação (WIP)
+Atualmente, o COVID19-ES-Py possui suporte para Python 3.6+.
+
+### Pelo repositório PyPI
 Utilize seu gerenciador de pacotes preferido para instalar o pacote. Com `pip`:
 
 ```shell
-pip install covid19-es-py
+pip install COVID19-ES-Py
 ```
 
-Atualmente, o COVID19-ES-Py possui suporte para Python 3.5+.
+### Pelo código fonte
+1. Clone o repositório ou baixe o código fonte (neste caso, descompacte o arquivo);
+2. Entre no diretório raiz do pacote pelo terminal e rode o comando `python setup.py install --user`
 
 # Como usar
 
@@ -37,10 +42,10 @@ A API possui duas classes: `ScraperBoletim` e `Boletim`. A primeira é capaz de 
 
 ## Exemplos
 ```python
-import covid19_es_py
+import COVID19_ES_Py
 
 # Inicializando o scraper
-scraper = covid19_es_py.ScraperBoletim()
+scraper = COVID19_ES_Py.ScraperBoletim()
 
 # Carregando objeto Boletim com último boletim emitido
 boletim = scraper.carrega_ultimo_boletim()
@@ -71,6 +76,6 @@ boletim.pesquisa_casos_municipio("arapiraca")
 Você pode aprender mais sobre a API lendo a [documentação oficial](https://www.google.com.br). -->
 
 ## Considerações finais
-Encontrou algum erro? Tem alguma sugestão para melhorar a COVID19-ES-Py? [Crie uma issue!](https://github.com/atilioa/covid19-es-py/issues) Contribuições são muito bem-vindas.
+Encontrou algum erro? Tem alguma sugestão para melhorar a COVID19-ES-Py? [Crie uma issue!](https://github.com/atilioa/COVID19-ES-Py/issues) Contribuições são muito bem-vindas.
 
 Os dados são disponibilizados pelo Governo do Estado do Espírito Santo com a Superintendência Estadual de Comunicação Social do Espírito Santo (SECOM).

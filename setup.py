@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="COVID19-ES-Py",
-    version="1.0.1",
+    version="1.0.2",
     description="Scraper de casos de COVID-19 no Espírito Santo.",
     long_description=README,
     long_description_content_type="text/markdown",

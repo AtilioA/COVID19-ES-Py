@@ -1,7 +1,7 @@
 <h1 align="center">
   <br>
   <a href="https://pypi.org/project/pycep-correios/">
-  <img src="docs/logo_COVID19-ES-Py.png" width="25%"></a>
+  <img src="docs/logo_COVID19-ES-Py.png" width="30%"></a>
   <br>
   COVID19-ES-Py
   <br>
@@ -44,12 +44,12 @@ scraper = covid19_es_py.ScraperBoletim()
 
 # Carregando objeto Boletim com último boletim emitido
 boletim = scraper.carrega_ultimo_boletim()
-print(boletim.casos)
->>> {'Afonso Cláudio': {'casosConfirmados': '0', 'casosDescartados': '1', 'casosSuspeitos': '00', 'totalCasos': '1'}, 'Água Doce do Norte': {'casosConfirmados': '00', 'casosDescartados': '1', 'casosSuspeitos': '2', 'totalCasos': '3'}
+boletim.casos
+>>> {'Afonso Cláudio': {'casosConfirmados': '0', 'casosDescartados': '1', 'casosSuspeitos': '0', 'totalCasos': '1',},
 ...
 'Vitória': {'casosConfirmados': '18', 'casosDescartados': '96', 'casosSuspeitos': '142', 'totalCasos': '256'}}
 
-print(boletim.totalGeral)
+boletim.totalGeral
 >>> {'casosConfirmados': '53 + 1*', 'casosDescartados': '411', 'casosSuspeitos': '1.105', 'totalCasos': '1.570'}
 
 boletim.pesquisa_casos_municipio("Vitória")
@@ -71,6 +71,6 @@ boletim.pesquisa_casos_municipio("arapiraca")
 Você pode aprender mais sobre a API lendo a [documentação oficial](https://www.google.com.br). -->
 
 ## Considerações finais
-Encontrou algum erro? Tem alguma sugestão para melhorar a COVID19-ES-Py? [Crie uma issue!](https://github.com/atilioa/covid19-es-py/issues) Contribuições são muito bem-vindas!
+Encontrou algum erro? Tem alguma sugestão para melhorar a COVID19-ES-Py? [Crie uma issue!](https://github.com/atilioa/covid19-es-py/issues) Contribuições são muito bem-vindas.
 
 Os dados são disponibilizados pelo Governo do Estado do Espírito Santo com a Superintendência Estadual de Comunicação Social do Espírito Santo (SECOM).

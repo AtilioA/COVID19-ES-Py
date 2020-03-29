@@ -1,11 +1,14 @@
 <h1 align="center">
   <br>
-  <a href="https://pypi.org/project/pycep-correios/">
+  <a href="https://pypi.org/project/COVID19-ES-Py/">
   <img src="https://raw.githubusercontent.com/AtilioA/COVID19-ES-Py/5c84a08be8a32a7f2850b591fbf1b4664779f51a/docs/logo_COVID19-ES-Py.png" width="40%"></a>
   <br>
   COVID19-ES-Py
   <br>
+
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/COVID19-ES-Py.svg)](https://pypi.python.org/pypi/COVID19-ES-Py/) ![PyPI](https://img.shields.io/pypi/v/COVID19-ES-Py) [![HitCount](http://hits.dwyl.com/atilioa/COVID19-ES-Py.svg)](http://hits.dwyl.com/atilioa/COVID19-ES-Py) ![PyPI - Downloads](https://img.shields.io/pypi/dm/covid19-es-py) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 </h1>
+
 
 <h4 align="center">API em Python para consulta de casos de COVID-19 no estado do Espírito Santo.</h4>
 
@@ -22,7 +25,7 @@
 * Coleta números de casos dos boletins
 * Possibilita pesquisa de casos por município
 
-# Instalação (WIP)
+# Instalação
 Atualmente, o COVID19-ES-Py possui suporte para Python 3.6+.
 
 ### Pelo repositório PyPI
@@ -34,13 +37,14 @@ pip install COVID19-ES-Py
 
 ### Pelo código fonte
 1. Clone o repositório ou baixe o código fonte (neste caso, descompacte o arquivo);
-2. Entre no diretório raiz do pacote pelo terminal e rode o comando `python setup.py install --user`
+2. Entre no diretório raiz do pacote pelo terminal e rode o comando `python setup.py install`
 
 # Como usar
 
 A API possui duas classes: `ScraperBoletim` e `Boletim`. A primeira é capaz de extrair links de boletins e usa objetos `Boletim` para fazer a interface para o programador. A segunda pode ser utilizada para extrair informações de um boletim específico.
 
 ## Exemplos
+Inicializando o scraper e obtendo dados do último boletim:
 ```python
 import COVID19_ES_Py
 
@@ -53,10 +57,16 @@ boletim.casos
 >>> {'Afonso Cláudio': {'casosConfirmados': '0', 'casosDescartados': '1', 'casosSuspeitos': '0', 'totalCasos': '1',},
 ...
 'Vitória': {'casosConfirmados': '18', 'casosDescartados': '96', 'casosSuspeitos': '142', 'totalCasos': '256'}}
+```
 
+Total de casos do boletim:
+```python
 boletim.totalGeral
 >>> {'casosConfirmados': '53 + 1*', 'casosDescartados': '411', 'casosSuspeitos': '1.105', 'totalCasos': '1.570'}
+```
 
+Pesquisando casos por município:
+```python
 boletim.pesquisa_casos_municipio("Vitória")
 >>> {'casosConfirmados': '18', 'casosDescartados': '96', 'casosSuspeitos': '142', 'totalCasos': '256'}
 

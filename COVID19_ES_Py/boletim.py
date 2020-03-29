@@ -115,7 +115,7 @@ class ScraperBoletim():
         try:
             articleNoticia = html.find('article', class_='noticia list-content-item content-item')
             ultimaNoticia = articleNoticia.find('a')['href']
-            return f"DOMINIO_BOLETINS{ultimaNoticia}"
+            return f"{DOMINIO_BOLETINS}{ultimaNoticia}"
         except AttributeError:
             return None
 

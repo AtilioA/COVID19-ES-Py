@@ -36,12 +36,12 @@ pip install COVID19-ES-Py
 ```
 
 ### Pelo código fonte
-1. Clone o repositório ou baixe o código fonte (neste caso, descompacte o arquivo);
+1. [Baixe a última release](https://github.com/AtilioA/COVID19-ES-Py/releases) e extraia a pasta;
 2. Entre no diretório raiz do pacote pelo terminal e rode o comando `python setup.py install`
 
 # Como usar
 
-A API possui duas classes: `ScraperBoletim` e `Boletim`. A primeira é capaz de extrair links de boletins e usa objetos `Boletim` para fazer a interface para o programador. A segunda pode ser utilizada para extrair informações de um boletim específico.
+A API possui duas classes: `ScraperBoletim` e `Boletim`. A primeira é capaz de extrair links de boletins e usa objetos `Boletim` para fazer a interface para o programador. A segunda pode ser utilizada para extrair informações de um boletim específico. Confira os exemplos a seguir:
 
 ## Exemplos
 Inicializando o scraper e obtendo dados do último boletim:

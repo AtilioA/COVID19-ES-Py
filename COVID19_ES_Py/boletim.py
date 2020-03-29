@@ -1,10 +1,15 @@
+"""O módulo `boletim.py` é o principal do pacote.
+Nele são introduzidas as classes e métodos utilizados para coletar dados dos boletins emitidos pelo Governo.
+
+"""
+
 import re
 import logging
 import unicodedata
 import requests
 import configparser
 from bs4 import BeautifulSoup
-from .utils import remove_acentos
+from .utils import remove_caracteres_especiais
 from .exceptions import BoletimError
 
 DOMINIO_FEED = "https://coronavirus.es.gov.br/Noticias"
@@ -44,7 +49,7 @@ class ScraperBoletim():
 
         Returns
         ----------
-        html : objeto BS4
+        html : objeto BS4 ou None
             O objeto BS4 do HTML lido ou None se houver falha na requisição."""
 
         if URLPagina:
@@ -70,7 +75,7 @@ class ScraperBoletim():
 
         Returns
         ----------
-        linksBoletins : list : string
+        linksBoletins : list : string ou None
             Lista com URLs dos boletins da página do feed ou None se houver falha na requisição."""
 
         try:
@@ -108,7 +113,7 @@ class ScraperBoletim():
 
         Returns
         ----------
-        url : string
+        url : ``string`` ou ``None``
             URL do último boletim ou None se busca falhar."""
 
         html = self.carrega_html_feed(self.URLFeedBoletins)
@@ -146,7 +151,7 @@ class Boletim():
         A URL do boletim.
     n : string
         O número do boletim.
-    html : BeautifulSoup4
+    html : objeto BS4
         O HTML lido como objeto BS4.
     casos : dict
         O dicionário de casos registrados nos municípios do ES.
@@ -234,11 +239,11 @@ class Boletim():
         Returns
         ----------
         self.casos[municipio] : dict
-            O dicionário de casos registrados no município, BoletimError se não for encontrado."""
+            O dicionário de casos registrados no município, ou `BoletimError` se não for encontrado."""
 
-        stringMunicipioTratada = remove_acentos(municipio).lower().strip()
+        stringMunicipioTratada = remove_caracteres_especiais(municipio).lower().strip()
         stringsMunicipiosTratadas = list(
-            map(lambda string: remove_acentos(string).lower().strip(), self.casos.keys()))
+            map(lambda string: remove_caracteres_especiais(string).lower().strip(), self.casos.keys()))
         try:
             indiceMunicipio = stringsMunicipiosTratadas.index(
                 stringMunicipioTratada)
@@ -248,15 +253,3 @@ class Boletim():
         else:
             municipio = list(self.casos.keys())[indiceMunicipio]
             return self.casos[municipio]
-
-
-if __name__ == '__main__':
-    # Exemplos de uso
-
-    # Inicializando o scraper
-    scraper = ScraperBoletim()
-
-    # Carregando objeto Boletim com último boletim emitido
-    boletim = scraper.carrega_ultimo_boletim()
-    print(boletim.casos)
-    print(boletim.nMunicipiosInfectados)

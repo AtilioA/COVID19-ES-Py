@@ -3,7 +3,7 @@
     >>> scraper = COVID19_ES_Py.ScraperBoletim()
     >>> boletim = scraper.carrega_ultimo_boletim()
 
-Veja https://github.com/AtilioA/COVID19-ES-Py para mais informações
+Veja https://github.com/AtilioA/COVID19-ES-Py para mais informações.
 """
 
 # flake8: noqa
@@ -14,4 +14,4 @@ __all__ = [
     'Boletim',
 ]
 
-__version__ = "1.0.3"
+__version__ = "1.0.4"

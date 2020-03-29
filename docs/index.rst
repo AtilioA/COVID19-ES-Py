@@ -6,12 +6,6 @@
 Documentação oficial - COVID19-ES-Py
 =========================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-    modules
-
 Índices
 ==================
 
@@ -153,7 +147,7 @@ Pesquisando casos por município:
 
 
 Considerações finais
-=========
+====================
 
 Encontrou algum erro? Tem alguma sugestão para melhorar a COVID19-ES-Py? `Crie uma issue! <https://github.com/atilioa/COVID19-ES-Py/issues>`_ Contribuições são muito bem-vindas.
 

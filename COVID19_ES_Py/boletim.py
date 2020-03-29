@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup
 from .utils import remove_acentos
 from .exceptions import BoletimError
 
-config = configparser.ConfigParser()
-config.read('./config.ini')
+DOMINIO_FEED = "https://coronavirus.es.gov.br/Noticias"
+DOMINIO_BOLETINS = "https://coronavirus.es.gov.br/"
 
 # Produz registros
 logging.basicConfig(format='%(asctime)s %(message)s',
@@ -31,7 +31,7 @@ class ScraperBoletim():
         Uma lista com URLs dos boletins.
     """
     def __init__(self, ):
-        self.URLFeedBoletins = config['url']['DOMINIO_FEED']
+        self.URLFeedBoletins = DOMINIO_FEED
         self.URLsBoletins = None
 
     def carrega_html_feed(self, URLPagina):
@@ -115,7 +115,7 @@ class ScraperBoletim():
         try:
             articleNoticia = html.find('article', class_='noticia list-content-item content-item')
             ultimaNoticia = articleNoticia.find('a')['href']
-            return config['url']['DOMINIO_BOLETINS'] + ultimaNoticia
+            return f"DOMINIO_BOLETINS{ultimaNoticia}"
         except AttributeError:
             return None
 

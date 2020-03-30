@@ -5,10 +5,15 @@ verify_ssl = true
 
 [dev-packages]
 flake8 = "*"
+black = "*"
 
 [packages]
-beautifulsoup4 = "4.8.2"
-requests = "2.23.0"
+beautifulsoup4 = "*"
+requests = "*"
+arrow = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

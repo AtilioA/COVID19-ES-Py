@@ -1,7 +1,7 @@
 <h1 align="center">
   <br>
   <a href="https://pypi.org/project/COVID19-ES-Py/">
-  <img src="https://raw.githubusercontent.com/AtilioA/COVID19-ES-Py/5c84a08be8a32a7f2850b591fbf1b4664779f51a/docs/logo_COVID19-ES-Py.png" width="40%"></a>
+  <img src="https://raw.githubusercontent.com/AtilioA/COVID19-ES-Py/c28e8a1f8799d6a067d7c4587a9467d3bc595e9e/docs/logo_COVID19-ES-Py.png" width="40%"></a>
   <br>
   COVID19-ES-Py
   <br>
@@ -22,7 +22,7 @@
 
 # Recursos
 * Extrai URLs de boletins emitidos pelo Governo do Estado do Espírito Santo
-* Coleta números de casos dos boletins
+* Coleta título, datas, corpo de notícia, números de casos, etc, dos boletins
 * Possibilita pesquisa de casos por município
 
 # Instalação
@@ -82,8 +82,8 @@ boletim.pesquisa_casos_municipio("arapiraca")
 >>> exceptions.BoletimError: O município "arapiraca" não foi encontrado no boletim. Pode ter ocorrido um erro de digitação ou o município não registrou casos de COVID-19.
 ```
 
-<!-- ## Documentação
-Você pode aprender mais sobre a API lendo a [documentação oficial](https://www.google.com.br). -->
+## Documentação
+Você pode aprender mais sobre a API lendo a [documentação oficial](https://covid19-es-py.readthedocs.io/pt_BR/latest/).
 
 ## Considerações finais
 Encontrou algum erro? Tem alguma sugestão para melhorar a COVID19-ES-Py? [Crie uma issue!](https://github.com/atilioa/COVID19-ES-Py/issues) Contribuições são muito bem-vindas.

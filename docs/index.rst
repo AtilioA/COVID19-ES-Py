@@ -20,7 +20,7 @@ Documentação oficial - COVID19-ES-Py
    <h1 align="center">
      <br>
      <a href="https://pypi.org/project/COVID19-ES-Py/">
-     <img src="https://raw.githubusercontent.com/AtilioA/COVID19-ES-Py/5c84a08be8a32a7f2850b591fbf1b4664779f51a/docs/logo_COVID19-ES-Py.png" width="40%"></a>
+     <img src="https://raw.githubusercontent.com/AtilioA/COVID19-ES-Py/master/docs/logo_COVID19-ES-Py.png" width="40%"></a>
      <br>
      COVID19-ES-Py
      <br>
@@ -69,7 +69,7 @@ Recursos
 
 
 * Extrai URLs de boletins emitidos pelo Governo do Estado do Espírito Santo
-* Coleta números de casos dos boletins
+* Coleta título, datas, corpo de notícia, números de casos, etc, dos boletins
 * Possibilita pesquisa de casos por município
 
 Instalação

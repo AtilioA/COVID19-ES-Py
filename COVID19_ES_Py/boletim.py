@@ -4,6 +4,7 @@ Nele são introduzidas as classes e métodos utilizados para coletar dados dos b
 """
 
 import re
+from urllib.parse import urljoin
 import logging
 import unicodedata
 import requests
@@ -135,7 +136,7 @@ class ScraperBoletim:
                 "article", class_="noticia list-content-item content-item"
             )
             ultimaNoticia = articleNoticia.find("a")["href"]
-            return ultimaNoticia
+            return urljoin(DOMINIO_BOLETINS, ultimaNoticia)
         except AttributeError:
             return None
 
@@ -182,7 +183,7 @@ class ScraperBoletim:
                             dataBoletim = arrow.get(
                                 matchData.group(0), "DD/MM/YYYY")
                             if dataBoletim == dataArrow:
-                                return Boletim(f"{DOMINIO_BOLETINS}{linkBoletim}")
+                                return Boletim(urljoin(DOMINIO_BOLETINS, linkBoletim))
         return None
 
 

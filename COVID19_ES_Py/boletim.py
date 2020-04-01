@@ -16,15 +16,17 @@ DOMINIO_FEED = "https://coronavirus.es.gov.br/Noticias"
 DOMINIO_BOLETINS = "https://coronavirus.es.gov.br/"
 
 # Produz registros
-logging.basicConfig(format='%(asctime)s %(message)s',
-                    datefmt='%d/%m/%Y %H:%M:%S',
-                    filename='scraperboletim.log',
-                    level=logging.DEBUG)
+logging.basicConfig(
+    format="%(asctime)s %(message)s",
+    datefmt="%d/%m/%Y %H:%M:%S",
+    filename="scraperboletim.log",
+    level=logging.DEBUG,
+)
 mainLogger = logging.getLogger(__name__)
 mainLogger.setLevel(logging.DEBUG)
 
 
-class ScraperBoletim():
+class ScraperBoletim:
     """
     Um objeto `ScraperBoletim` é capaz de varrer o feed de boletins em busca de suas URLs.
 
@@ -35,7 +37,8 @@ class ScraperBoletim():
     URLsBoletins : ``list`` : ``str``
         Uma lista com URLs dos boletins (preenchida caso o método `extrai_todos_boletins` seja chamado).
     """
-    def __init__(self, ):
+
+    def __init__(self,):
         self.URLFeedBoletins = DOMINIO_FEED
         self.URLsBoletins = None
 
@@ -60,7 +63,7 @@ class ScraperBoletim():
             mainLogger.info(f"Requisição bem sucedida para {req.url}")
             # Pega conteúdo (HTML) da requisição
             content = req.content
-            html = BeautifulSoup(content, 'html.parser')
+            html = BeautifulSoup(content, "html.parser")
             return html
         else:
             mainLogger.error(f"Requisição falhou para {req.url}")
@@ -81,8 +84,12 @@ class ScraperBoletim():
         try:
             html = self.carrega_html_feed(URLPagina)
             articleNoticias = html.find_all(
-                'article', class_='noticia list-content-item content-item')
-            linksBoletins = list(map(lambda article: article.find_all('a')[0]['href'], articleNoticias))
+                "article", class_="noticia list-content-item content-item"
+            )
+            linksBoletins = list(
+                map(lambda article: article.find_all(
+                    "a")[0]["href"], articleNoticias)
+            )
             return linksBoletins
         except AttributeError:
             return None
@@ -96,19 +103,24 @@ class ScraperBoletim():
             Lista com URLs de todos os boletins publicados até o momento."""
 
         todosBoletins = []
-        i = 0
-        while(True):
+        i = 1
+        while True:
             boletinsPagina = self.extrai_boletins_pagina(
-                f"https://coronavirus.es.gov.br/Noticias?page={i}")
+                f"https://coronavirus.es.gov.br/Noticias?page={i}"
+            )
             if boletinsPagina:
-                todosBoletins.extend(self.extrai_boletins_pagina(f"https://coronavirus.es.gov.br/Noticias?page={i}"))
+                todosBoletins.extend(
+                    self.extrai_boletins_pagina(
+                        f"https://coronavirus.es.gov.br/Noticias?page={i}"
+                    )
+                )
                 i += 1
             else:
                 break
         self.URLsBoletins = todosBoletins
         return todosBoletins
 
-    def url_ultimo_boletim(self):
+    def url_ultimo_boletim(self, html=None):
         """Busca URL do último boletim e retorna-a.
 
         Returns
@@ -116,11 +128,14 @@ class ScraperBoletim():
         url : ``string`` ou ``None``
             URL do último boletim ou ``None`` se busca falhar."""
 
-        html = self.carrega_html_feed(self.URLFeedBoletins)
+        if not html:
+            html = self.carrega_html_feed(self.URLFeedBoletins)
         try:
-            articleNoticia = html.find('article', class_='noticia list-content-item content-item')
-            ultimaNoticia = articleNoticia.find('a')['href']
-            return f"{DOMINIO_BOLETINS}{ultimaNoticia}"
+            articleNoticia = html.find(
+                "article", class_="noticia list-content-item content-item"
+            )
+            ultimaNoticia = articleNoticia.find("a")["href"]
+            return ultimaNoticia
         except AttributeError:
             return None
 
@@ -135,8 +150,43 @@ class ScraperBoletim():
         urlBoletim = self.url_ultimo_boletim()
         return Boletim(urlBoletim)
 
+    def pesquisa_boletim_data(self, data):
+        dataArrow = arrow.get(
+            data, ["DD/MM/YYYY", "DD-MM-YYYY",
+                   "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
+        )
+        dataAgora = arrow.get(
+            arrow.now("America/Sao_Paulo").format("DD-MM-YYYY"), "DD-MM-YYYY"
+        )
 
-class Boletim():
+        if dataAgora >= dataArrow >= arrow.get("19/03/2020", "DD/MM/YYYY"):
+            i = 1
+            while True:
+                req = requests.get(
+                    f"https://coronavirus.es.gov.br/Noticias?page={i}")
+                content = req.content
+                html = BeautifulSoup(content, "html.parser")
+                if req.status_code == 200:
+                    noticias = html.find_all(
+                        "article", class_="noticia")
+
+                    patternDatas = r"(\d{1,2}\/\d{1,2}\/\d{4})"
+                    for noticia in noticias:
+                        linkBoletim = noticia.find(
+                            "h4", class_="title-list").find("a")["href"]
+
+                        dataBoletim = noticia.find(
+                            "div", class_="published").text
+                        matchData = re.search(patternDatas, dataBoletim)
+                        if matchData:
+                            dataBoletim = arrow.get(
+                                matchData.group(0), "DD/MM/YYYY")
+                            if dataBoletim == dataArrow:
+                                return Boletim(f"{DOMINIO_BOLETINS}{linkBoletim}")
+        return None
+
+
+class Boletim:
     """
     Um objeto `Boletim` é capaz de extrair números de casos de um boletim.
 
@@ -193,31 +243,31 @@ class Boletim():
         """Formata o objeto Arrow com data de publicação para o formato usual dos boletins."""
 
         if self.dataPublicacao:
-            return self.dataPublicacao.format('DD/MM/YYYY HH:mm')
+            return self.dataPublicacao.format("DD/MM/YYYY HH:mm")
 
     def pega_dataAtualizacao_formatada(self):
         """Formata o objeto Arrow com data de atualização para o formato usual dos boletins."""
 
         if self.dataAtualizacao:
-            return self.dataAtualizacao.format('DD/MM/YYYY HH:mm')
+            return self.dataAtualizacao.format("DD/MM/YYYY HH:mm")
 
     def extrai_numero_boletim(self):
         """Extrai o número do boletim pela URL."""
 
-        buscaPadrao = re.search(r'(\d+)o', self.url)
+        buscaPadrao = re.search(r"(\d+)o", self.url)
         if buscaPadrao:
             return int(buscaPadrao.group(1))
 
     def extrai_titulo_boletim(self):
         """Extrai título do HTML do boletim."""
 
-        tituloBoletim = self.html.find('h2', class_='title-content')
+        tituloBoletim = self.html.find("h2", class_="title-content")
         return tituloBoletim.text
 
     def extrai_datas_boletim(self):
         """Extrai as datas de publicação e atualização (esta se existir) do HTML do boletim."""
 
-        datasBoletim = self.html.find('div', class_='published').text
+        datasBoletim = self.html.find("div", class_="published").text
 
         patternDatas = r"(\d{1,2}\/\d{1,2}\/\d{4}\s*\w+h\w*)"
         matchData = re.findall(patternDatas, datasBoletim)
@@ -235,8 +285,8 @@ class Boletim():
     def extrai_corpo_boletim(self):
         """Extrai o corpo de texto do HTML do boletim."""
 
-        corpo = self.html.find('div', class_='clearfix body-part')
-        stringCorpo = corpo.find('p').text
+        corpo = self.html.find("div", class_="clearfix body-part")
+        stringCorpo = corpo.find("p").text
 
         return stringCorpo
 
@@ -245,13 +295,13 @@ class Boletim():
 
         req = requests.get(self.url)
         if req.status_code == 200:
-            mainLogger.info(f'Requisição bem sucedida para {self.url}!')
+            mainLogger.info(f"Requisição bem sucedida para {self.url}!")
             # Pega conteúdo (HTML) da requisição
             content = req.content
-            html = BeautifulSoup(content, 'html.parser')
+            html = BeautifulSoup(content, "html.parser")
             return html
         else:
-            mainLogger.error(f'Requisição falhou para {self.url}.')
+            mainLogger.error(f"Requisição falhou para {self.url}.")
 
     def carrega_tabela_boletim(self):
         """Seleciona a tabela do boletim com número de casos no Estado."""
@@ -272,24 +322,40 @@ class Boletim():
                 municipio = dadoslinha[0]
 
                 self.casos[municipio] = {
-                    'casosConfirmados': unicodedata.normalize("NFKD", dadoslinha[1]).replace(' ', '0'),
-                    'casosDescartados': unicodedata.normalize("NFKD", dadoslinha[2]).replace(' ', '0'),
-                    'casosSuspeitos': unicodedata.normalize("NFKD", dadoslinha[3]).replace(' ', '0'),
-                    'totalCasos': unicodedata.normalize("NFKD", dadoslinha[4]).replace(' ', '0')
+                    "casosConfirmados": unicodedata.normalize(
+                        "NFKD", dadoslinha[1]
+                    ).replace(" ", "0"),
+                    "casosDescartados": unicodedata.normalize(
+                        "NFKD", dadoslinha[2]
+                    ).replace(" ", "0"),
+                    "casosSuspeitos": unicodedata.normalize(
+                        "NFKD", dadoslinha[3]
+                    ).replace(" ", "0"),
+                    "totalCasos": unicodedata.normalize("NFKD", dadoslinha[4]).replace(
+                        " ", "0"
+                    ),
                 }
 
-            dadosTotalGeral = list(map(lambda linha: unicodedata.normalize(
-                "NFKD", linha.text), tabela[-1].find_all("p")))
+            dadosTotalGeral = list(
+                map(
+                    lambda linha: unicodedata.normalize("NFKD", linha.text),
+                    tabela[-1].find_all("p"),
+                )
+            )
             self.totalGeral = {
-                'casosConfirmados': unicodedata.normalize("NFKD", dadosTotalGeral[1]),
-                'casosDescartados': unicodedata.normalize("NFKD", dadosTotalGeral[2]),
-                'casosSuspeitos': unicodedata.normalize("NFKD", dadosTotalGeral[3]),
-                'totalCasos': unicodedata.normalize("NFKD", dadosTotalGeral[4])
+                "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
+                "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
+                "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
+                "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
             }
 
         else:
-            mainLogger.error(f"O boletim de nº {self.n} (n < 21, anterior a 19/03/2020) não é suportado.")
-            raise BoletimError(f"O boletim de nº {self.n} (n < 21, anterior a 19/03/2020) não é suportado.")
+            mainLogger.error(
+                f"O boletim de nº {self.n} (n < 21, anterior a 19/03/2020) não é suportado."
+            )
+            raise BoletimError(
+                f"O boletim de nº {self.n} (n < 21, anterior a 19/03/2020) não é suportado."
+            )
 
     def conta_municipios_com_casos(self):
         """Conta o número de municípios com algum caso registrado, confirmado ou não."""
@@ -311,7 +377,10 @@ class Boletim():
 
         for elemento in linhasTabela:
             elementoTratado = remove_caracteres_especiais(elemento).upper()
-            if elementoTratado in MUNICIPIOS and int(self.casos[elemento]['casosConfirmados']) > 0:
+            if (
+                elementoTratado in MUNICIPIOS
+                and int(self.casos[elemento]["casosConfirmados"]) > 0
+            ):
                 municipiosInfectados += 1
 
         return municipiosInfectados
@@ -334,15 +403,34 @@ class Boletim():
         self.casos[municipio] : ``dict``
             O dicionário de casos registrados no município."""
 
-        stringMunicipioTratada = remove_caracteres_especiais(municipio).lower().strip()
+        stringMunicipioTratada = remove_caracteres_especiais(
+            municipio).lower().strip()
         stringsMunicipiosTratadas = list(
-            map(lambda string: remove_caracteres_especiais(string).lower().strip(), self.casos.keys()))
+            map(
+                lambda string: remove_caracteres_especiais(
+                    string).lower().strip(),
+                self.casos.keys(),
+            )
+        )
         try:
             indiceMunicipio = stringsMunicipiosTratadas.index(
                 stringMunicipioTratada)
         except ValueError:  # O município não foi encontrado
-            mainLogger.error(f"Município {municipio} não encontrado no boletim.")
-            raise BoletimError(f"O município \"{stringMunicipioTratada}\" não foi encontrado no boletim. Pode ter ocorrido um erro de digitação ou o município não registrou casos de COVID-19.")
+            mainLogger.error(
+                f"Município {municipio} não encontrado no boletim.")
+            raise BoletimError(
+                f'O município "{stringMunicipioTratada}" não foi encontrado no boletim. Pode ter ocorrido um erro de digitação ou o município não registrou casos de COVID-19.'
+            )
         else:
             municipio = list(self.casos.keys())[indiceMunicipio]
             return self.casos[municipio]
+
+    def filtra_municipios_com_casos(self):
+        municipiosComCasos = {
+            municipio: self.casos[municipio]["casosConfirmados"]
+            for (municipio, casos) in self.casos.items()
+            if int(self.casos[municipio]["casosConfirmados"]) > 0
+            and remove_caracteres_especiais(municipio).upper() in MUNICIPIOS
+        }
+
+        return municipiosComCasos

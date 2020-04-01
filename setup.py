@@ -7,7 +7,7 @@ with open(path.join(thisDirectory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="COVID19-ES-Py",
-    version="1.1.0",
+    version="1.2.0",
     description="Scraper de boletins de casos de COVID-19 no Espírito Santo.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -20,6 +20,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8"
     ],
     packages=find_packages(),
     include_package_data=True,

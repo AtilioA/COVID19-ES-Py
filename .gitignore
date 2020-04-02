@@ -131,3 +131,4 @@ dmypy.json
 .vscode/
 ignore/
 *ignore_me*
+*.csv

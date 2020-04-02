@@ -1,14 +1,14 @@
 <h1 align="center">
   <br>
   <a href="https://pypi.org/project/COVID19-ES-Py/">
-  <img src="https://raw.githubusercontent.com/AtilioA/COVID19-ES-Py/c28e8a1f8799d6a067d7c4587a9467d3bc595e9e/docs/logo_COVID19-ES-Py.png" width="40%"></a>
+  <img src="https://raw.githubusercontent.com/AtilioA/COVID19-ES-Py/c28e8a1f8799d6a067d7c4587a9467d3bc595e9e/docs/logo_COVID19-ES-Py.png" width="30%"></a>
   <br>
   COVID19-ES-Py
   <br>
 
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/COVID19-ES-Py.svg)](https://pypi.python.org/pypi/COVID19-ES-Py/) ![PyPI](https://img.shields.io/pypi/v/COVID19-ES-Py) [![HitCount](http://hits.dwyl.com/atilioa/COVID19-ES-Py.svg)](http://hits.dwyl.com/atilioa/COVID19-ES-Py) ![PyPI - Downloads](https://img.shields.io/pypi/dm/covid19-es-py) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
-</h1>
-
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/COVID19-ES-Py.svg)](https://pypi.python.org/pypi/COVID19-ES-Py/) ![PyPI](https://img.shields.io/pypi/v/COVID19-ES-Py)
+![Travis (.org)](https://img.shields.io/travis/AtilioA/COVID19-ES-Py) ![Read the Docs](https://img.shields.io/readthedocs/covid19-es-py) ![Codacy grade](https://img.shields.io/codacy/grade/2a7bb708cf374f2badcdbe30b5342377)
+[![HitCount](http://hits.dwyl.com/atilioa/COVID19-ES-Py.svg)](http://hits.dwyl.com/atilioa/COVID19-ES-Py) ![PyPI - Downloads](https://img.shields.io/pypi/dm/covid19-es-py) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <h4 align="center">API em Python para consulta de casos de COVID-19 no estado do Espírito Santo.</h4>
 

@@ -58,7 +58,7 @@ class ScraperBoletim:
 
         if URLPagina:
             req = requests.get(URLPagina)
-        elif self.URLFeedBoletins:
+        elif self.URLFeedBoletins:  # pragma: no cover
             req = requests.get(self.URLFeedBoletins)  # pragma: no cover
         else:
             req = requests.get(
@@ -100,12 +100,9 @@ class ScraperBoletim:
         except (AttributeError, TypeError) as err:
             raise BoletimError(
                 f"Não foi possível extrair boletins da página de URL {URLPagina} ou do HTML {html}: {err}")
-        except requests.exceptions.MissingSchema as err:
+        except requests.exceptions.MissingSchema as err:  # pragma: no cover
             mainLogger.error(f"URL mal formada: {err}")
             raise err
-        except (SyntaxError) as err:
-            mainLogger.error(err)
-            raise(err)
 
     def extrai_todos_boletins(self):
         """Extrai as URLs de todos os boletins publicados até o momento.
@@ -256,14 +253,22 @@ class Boletim:
     def pega_dataPublicacao_formatada(self):
         """Formata o objeto Arrow com data de publicação para o formato usual dos boletins."""
 
-        if self.dataPublicacao:
-            return self.dataPublicacao.format("DD/MM/YYYY HH[h]mm")
+        try:
+            if self.dataPublicacao:
+                return self.dataPublicacao.format("DD/MM/YYYY HH[h]mm")
+        except AttributeError as err:
+            mainLogger.error(f"Data {self.dataPublicacao} malformada: {err}")
+            raise err
 
     def pega_dataAtualizacao_formatada(self):
         """Formata o objeto Arrow com data de atualização para o formato usual dos boletins."""
 
-        if self.dataAtualizacao:
-            return self.dataAtualizacao.format("DD/MM/YYYY HH[h]mm")
+        try:
+            if self.dataAtualizacao:
+                return self.dataAtualizacao.format("DD/MM/YYYY HH[h]mm")
+        except AttributeError as err:
+            mainLogger.error(f"Data {self.dataAtualizacao} malformada: {err}")
+            raise err
 
     def extrai_numero_boletim(self):
         """Extrai o número do boletim pela URL."""

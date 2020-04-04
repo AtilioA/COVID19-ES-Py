@@ -69,7 +69,7 @@ class ScraperBoletim:
         else:
             mainLogger.error(f"Requisição falhou para {req.url}")
 
-    def extrai_boletins_pagina(self, URLPagina):
+    def extrai_boletins_pagina(self, URLPagina=None, html=None):
         """Extrai as URLs dos boletins presentes em uma página do feed de boletins.
 
         Parameters
@@ -83,7 +83,8 @@ class ScraperBoletim:
             Lista com URLs dos boletins da página do feed ou None se houver falha na requisição."""
 
         try:
-            html = self.carrega_html_feed(URLPagina)
+            if not html:
+                html = self.carrega_html_feed(URLPagina)
             articleNoticias = html.find_all(
                 "article", class_="noticia list-content-item content-item"
             )
@@ -92,7 +93,7 @@ class ScraperBoletim:
                     "a")[0]["href"], articleNoticias)
             )
             return linksBoletins
-        except AttributeError:
+        except (AttributeError, TypeError):
             return None
 
     def extrai_todos_boletins(self):

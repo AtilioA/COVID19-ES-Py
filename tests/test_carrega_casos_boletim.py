@@ -1,7 +1,7 @@
 import pytest
 from requests.exceptions import MissingSchema
 
-from COVID19_ES_Py import Boletim
+from COVID19_ES_Py import Boletim, exceptions
 
 
 # - TABELAS TIPO 1 | TODO: tabelas ainda não suportadas
@@ -393,3 +393,7 @@ def test_fail():
 
     with pytest.raises(AttributeError):
         Boletim("https://www.google.com.br")
+
+    with pytest.raises(exceptions.BoletimError):
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-5o-boletim-de-covid-19")

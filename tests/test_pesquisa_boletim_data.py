@@ -1,5 +1,5 @@
 import pytest
-from arrow.parser import ParserError
+import arrow
 from COVID19_ES_Py import ScraperBoletim, Boletim, exceptions
 
 
@@ -63,13 +63,13 @@ def test_31_03():
     assert(boletimPesquisa.n == boletim.n)
 
 
-# def test_01_04():
-#     boletim = Boletim(
-#         "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-34o-boletim-da-covid-19"
-#     )
+def test_01_04():
+    boletim = Boletim(
+        "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-34o-boletim-da-covid-19"
+    )
 
-#     boletimPesquisa = scraper.pesquisa_boletim_data("01_04_2020")
-#     assert(boletimPesquisa.n == boletim.n)
+    boletimPesquisa = scraper.pesquisa_boletim_data("01_04_2020")
+    assert(boletimPesquisa.n == boletim.n)
 
 
 def test_fail():
@@ -84,9 +84,9 @@ def test_fail():
     with pytest.raises(TypeError):
         scraper.pesquisa_boletim_data(10)
 
-    with pytest.raises(ParserError):
+    with pytest.raises(arrow.parser.ParserError):
         scraper.pesquisa_boletim_data("10")
-    with pytest.raises(ParserError):
+    with pytest.raises(arrow.parser.ParserError):
         scraper.pesquisa_boletim_data("20/03")
-    with pytest.raises(ParserError):
+    with pytest.raises(arrow.parser.ParserError):
         scraper.pesquisa_boletim_data("03/20")

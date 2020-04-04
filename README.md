@@ -6,8 +6,8 @@
   COVID19-ES-Py
   <br>
 
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/COVID19-ES-Py.svg)](https://pypi.python.org/pypi/COVID19-ES-Py/) ![PyPI](https://img.shields.io/pypi/v/COVID19-ES-Py)
-![Travis (.org)](https://img.shields.io/travis/AtilioA/COVID19-ES-Py) ![Read the Docs](https://img.shields.io/readthedocs/covid19-es-py) ![Codacy grade](https://img.shields.io/codacy/grade/2a7bb708cf374f2badcdbe30b5342377)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/COVID19-ES-Py.svg)](https://pypi.python.org/pypi/COVID19-ES-Py/) ![PyPI](https://img.shields.io/pypi/v/COVID19-ES-Py) ![Travis (.org)](https://img.shields.io/travis/AtilioA/COVID19-ES-Py) ![Read the Docs](https://img.shields.io/readthedocs/covid19-es-py) ![Codacy grade](https://img.shields.io/codacy/grade/2a7bb708cf374f2badcdbe30b5342377) ![Codecov](https://img.shields.io/codecov/c/github/atilioa/covid19-es-py)
+
 [![HitCount](http://hits.dwyl.com/atilioa/COVID19-ES-Py.svg)](http://hits.dwyl.com/atilioa/COVID19-ES-Py) ![PyPI - Downloads](https://img.shields.io/pypi/dm/covid19-es-py) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <h4 align="center">API em Python para consulta de casos de COVID-19 no estado do Espírito Santo.</h4>
@@ -17,6 +17,7 @@
   <a href="#instalação">Instalação</a> |
   <a href="#como-usar">Como usar</a> |
   <a href="#exemplos">Exemplos</a> |
+  <a href="#documentação">Documentação</a> |
   <a href="#considerações-finais">Considerações finais</a>
 </p>
 
@@ -36,7 +37,7 @@ pip install COVID19-ES-Py
 ```
 
 ### Pelo código fonte
-1. [Baixe a última release](https://github.com/AtilioA/COVID19-ES-Py/releases) e extraia a pasta;
+1. [Baixe a última release](https://github.com/AtilioA/COVID19-ES-Py/releases/latest) e extraia a pasta;
 2. Entre no diretório raiz do pacote pelo terminal e rode o comando `python setup.py install`
 
 # Como usar

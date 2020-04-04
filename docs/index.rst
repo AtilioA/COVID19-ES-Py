@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Documentação oficial - COVID19-ES-Py
+Início
 =========================================
 
 Índices
@@ -33,6 +33,16 @@ Documentação oficial - COVID19-ES-Py
 .. image:: https://img.shields.io/pypi/v/COVID19-ES-Py
    :target: https://img.shields.io/pypi/v/COVID19-ES-Py
    :alt: PyPI
+
+.. image:: https://img.shields.io/travis/AtilioA/COVID19-ES-Py
+   :target: https://img.shields.io/travis/AtilioA/COVID19-ES-Py
+   :alt: Travis (.org)
+
+.. image:: https://img.shields.io/readthedocs/covid19-es-py
+   :alt: Read The Docs
+
+.. image:: https://img.shields.io/codecov/c/github/atilioa/covid19-es-py?color=green
+   :alt: Codecov
 
 .. image:: http://hits.dwyl.com/atilioa/COVID19-ES-Py.svg
    :target: http://hits.dwyl.com/atilioa/COVID19-ES-Py

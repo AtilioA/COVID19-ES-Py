@@ -58,8 +58,11 @@ class ScraperBoletim:
 
         if URLPagina:
             req = requests.get(URLPagina)
+        elif self.URLFeedBoletins:
+            req = requests.get(self.URLFeedBoletins)  # pragma: no cover
         else:
-            req = requests.get(self.URLFeedBoletins)
+            req = requests.get(
+                "https://coronavirus.es.gov.br/Noticias")  # pragma: no cover
         if req.status_code == 200:
             mainLogger.info(f"Requisição bem sucedida para {req.url}")
             # Pega conteúdo (HTML) da requisição
@@ -67,7 +70,8 @@ class ScraperBoletim:
             html = BeautifulSoup(content, "html.parser")
             return html
         else:
-            mainLogger.error(f"Requisição falhou para {req.url}")
+            mainLogger.error(  # pragma: no cover
+                f"Requisição falhou para {req.url}")  # pragma: no cover
 
     def extrai_boletins_pagina(self, URLPagina=None, html=None):
         """Extrai as URLs dos boletins presentes em uma página do feed de boletins.
@@ -93,8 +97,15 @@ class ScraperBoletim:
                     "a")[0]["href"], articleNoticias)
             )
             return linksBoletins
-        except (AttributeError, TypeError):
-            return None
+        except (AttributeError, TypeError) as err:
+            raise BoletimError(
+                f"Não foi possível extrair boletins da página de URL {URLPagina} ou do HTML {html}: {err}")
+        except requests.exceptions.MissingSchema as err:
+            mainLogger.error(f"URL mal formada: {err}")
+            raise err
+        except (SyntaxError) as err:
+            mainLogger.error(err)
+            raise(err)
 
     def extrai_todos_boletins(self):
         """Extrai as URLs de todos os boletins publicados até o momento.
@@ -138,8 +149,9 @@ class ScraperBoletim:
             )
             ultimaNoticia = articleNoticia.find("a")["href"]
             return urljoin(DOMINIO_BOLETINS, ultimaNoticia)
-        except AttributeError:
-            return None
+        except (TypeError, AttributeError) as err:
+            mainLogger.error(f"Não foi possível ler o HTML: {err}")
+            raise err
 
     def carrega_ultimo_boletim(self):
         """Busca a URL do último boletim e instancia objeto Boletim com esta.
@@ -239,19 +251,19 @@ class Boletim:
         self.nMunicipiosInfectados = self.conta_municipios_infectados()
 
     def __str__(self):
-        return f"Boletim nº {self.n} - { self.pega_dataPublicacao_formatada()}.\nURL: {self.url}\n{self.nMunicipiosComCasos} municípios com possíveis casos.\nTotal ES: {self.totalGeral}"
+        return f"Boletim nº {self.n} - { self.pega_dataPublicacao_formatada()}.\nURL: {self.url}\n{self.nMunicipiosComCasos} municípios com possíveis casos.\nTotal ES: {self.totalGeral}"  # pragma: no cover
 
     def pega_dataPublicacao_formatada(self):
         """Formata o objeto Arrow com data de publicação para o formato usual dos boletins."""
 
         if self.dataPublicacao:
-            return self.dataPublicacao.format("DD/MM/YYYY HH:mm")
+            return self.dataPublicacao.format("DD/MM/YYYY HH[h]mm")
 
     def pega_dataAtualizacao_formatada(self):
         """Formata o objeto Arrow com data de atualização para o formato usual dos boletins."""
 
         if self.dataAtualizacao:
-            return self.dataAtualizacao.format("DD/MM/YYYY HH:mm")
+            return self.dataAtualizacao.format("DD/MM/YYYY HH[h]mm")
 
     def extrai_numero_boletim(self):
         """Extrai o número do boletim pela URL."""
@@ -297,13 +309,15 @@ class Boletim:
 
         req = requests.get(self.url)
         if req.status_code == 200:
-            mainLogger.info(f"Requisição bem sucedida para {self.url}!")
+            mainLogger.info(
+                f"Requisição bem sucedida para {self.url}!")
             # Pega conteúdo (HTML) da requisição
             content = req.content
             html = BeautifulSoup(content, "html.parser")
             return html
         else:
-            mainLogger.error(f"Requisição falhou para {self.url}.")
+            mainLogger.error(
+                f"Requisição falhou para {self.url}.")
 
     def carrega_tabela_boletim(self):
         """Seleciona a tabela do boletim com número de casos no Estado."""

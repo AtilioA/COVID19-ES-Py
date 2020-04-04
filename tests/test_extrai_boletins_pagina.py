@@ -1,6 +1,8 @@
+import pytest
+import requests
 from bs4 import BeautifulSoup
 
-from COVID19_ES_Py import ScraperBoletim
+from COVID19_ES_Py import ScraperBoletim, exceptions
 
 scraper = ScraperBoletim()
 
@@ -39,3 +41,23 @@ def test_31_03():
             'https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-25o-boletim-de-covid-19',
             'https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-24o-boletim-de-covid-19',
         ])
+
+
+def test_fail():
+    with pytest.raises(exceptions.BoletimError):
+        scraper.extrai_boletins_pagina(html="a")
+
+    with pytest.raises(exceptions.BoletimError):
+        scraper.extrai_boletins_pagina(html=5)
+
+    with pytest.raises(requests.exceptions.MissingSchema):
+        scraper.extrai_boletins_pagina(URLPagina="a")
+
+    with pytest.raises(requests.exceptions.MissingSchema):
+        scraper.extrai_boletins_pagina(URLPagina=2)
+
+    with pytest.raises(requests.exceptions.MissingSchema):
+        scraper.extrai_boletins_pagina(URLPagina=True)
+
+    with pytest.raises(exceptions.BoletimError):
+        scraper.extrai_boletins_pagina(html=True)

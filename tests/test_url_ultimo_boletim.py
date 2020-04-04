@@ -28,3 +28,15 @@ def test_fail():
             html = BeautifulSoup(htmlFile, "html.parser")
             URLUltimoBoletim = scraper.url_ultimo_boletim(html)
             print(URLUltimoBoletim)
+
+    with pytest.raises(TypeError):
+        scraper.url_ultimo_boletim("a")
+
+    with pytest.raises(AttributeError):
+        scraper.url_ultimo_boletim(1)
+
+    with pytest.raises(AttributeError):
+        scraper.url_ultimo_boletim(-1)
+
+    with pytest.raises(AttributeError):
+        scraper.url_ultimo_boletim(True)

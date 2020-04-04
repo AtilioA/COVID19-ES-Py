@@ -72,6 +72,16 @@ def test_01_04():
     assert(boletimPesquisa.n == boletim.n)
 
 
+def test_too_soon():
+    boletimPesquisa = scraper.pesquisa_boletim_data("01_03_2020")
+    assert(boletimPesquisa is None)
+
+
+def test_too_late():
+    boletimPesquisa = scraper.pesquisa_boletim_data("01_03_2077")
+    assert(boletimPesquisa is None)
+
+
 def test_fail():
     with pytest.raises(TypeError):
         scraper.pesquisa_boletim_data(None)

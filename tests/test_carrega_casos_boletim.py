@@ -4,95 +4,95 @@ from requests.exceptions import MissingSchema
 from COVID19_ES_Py import Boletim, exceptions
 
 
-# - TABELAS TIPO 1 | TODO: tabelas ainda não suportadas
-# def test_boletim_21():
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-21o-boletim-de-covid-19"
-#         ).casos["Vitória"]["casosConfirmados"]
-#         == "5"
-#     )
+# - TABELAS TIPO 1 (19_03)
+def test_boletim_21():
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-21o-boletim-de-covid-19"
+        ).casos["Vitória"]["casosConfirmados"]
+        == "5"
+    )
 
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-21o-boletim-de-covid-19"
-#         ).casos["Vila Velha"]["casosConfirmados"]
-#         == "7"
-#     )
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-21o-boletim-de-covid-19"
+        ).casos["Vila Velha"]["casosConfirmados"]
+        == "7"
+    )
 
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-21o-boletim-de-covid-19"
-#         ).casos["Linhares"]["casosConfirmados"]
-#         == "1"
-#     )
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-21o-boletim-de-covid-19"
+        ).casos["Linhares"]["casosConfirmados"]
+        == "1"
+    )
 
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-21o-boletim-de-covid-19"
-#         ).casos["Guarapari"]["casosConfirmados"]
-#         == "0"
-#     )
-
-
-# def test_boletim_22():
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-22o-boletim-de-covid-19"
-#         ).casos["Vitória"]["casosConfirmados"]
-#         == "6"
-#     )
-
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-22o-boletim-de-covid-19"
-#         ).casos["Vila Velha"]["casosConfirmados"]
-#         == "7"
-#     )
-
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-22o-boletim-de-covid-19"
-#         ).casos["Linhares"]["casosConfirmados"]
-#         == "1"
-#     )
-
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-22o-boletim-de-covid-19"
-#         ).casos["Guarapari"]["casosConfirmados"]
-#         == "0"
-#     )
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-21o-boletim-de-covid-19"
+        ).casos["Guarapari"]["casosConfirmados"]
+        == "0"
+    )
 
 
-# def test_boletim_23():
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-23o-boletim-de-covid-19"
-#         ).casos["Vitória"]["casosConfirmados"]
-#         == "11"
-#     )
+def test_boletim_22():
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-22o-boletim-de-covid-19"
+        ).casos["Vitória"]["casosConfirmados"]
+        == "6"
+    )
 
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-23o-boletim-de-covid-19"
-#         ).casos["Vila Velha"]["casosConfirmados"]
-#         == "11"
-#     )
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-22o-boletim-de-covid-19"
+        ).casos["Vila Velha"]["casosConfirmados"]
+        == "7"
+    )
 
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-23o-boletim-de-covid-19"
-#         ).casos["Linhares"]["casosConfirmados"]
-#         == "2"
-#     )
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-22o-boletim-de-covid-19"
+        ).casos["Linhares"]["casosConfirmados"]
+        == "1"
+    )
 
-#     assert (
-#         Boletim(
-#             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-23o-boletim-de-covid-19"
-#         ).casos["Guarapari"]["casosConfirmados"]
-#         == "0"
-#     )
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-22o-boletim-de-covid-19"
+        ).casos["Guarapari"]["casosConfirmados"]
+        == "0"
+    )
+
+
+def test_boletim_23():
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-23o-boletim-de-covid-19"
+        ).casos["Vitória"]["casosConfirmados"]
+        == "11"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-23o-boletim-de-covid-19"
+        ).casos["Vila Velha"]["casosConfirmados"]
+        == "11"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-23o-boletim-de-covid-19"
+        ).casos["Linhares"]["casosConfirmados"]
+        == "2"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-23o-boletim-de-covid-19"
+        ).casos["Guarapari"]["casosConfirmados"]
+        == "0"
+    )
 
 
 # TABELA TIPO 2 (22_03)
@@ -125,7 +125,7 @@ def test_boletim_24():
         == "0"
     )
 
-
+# TABELA TIPO 2 (23_03)
 def test_boletim_25():
     assert (
         Boletim(
@@ -366,7 +366,7 @@ def test_boletim_32():
         == "0"
     )
 
-
+# TABELA TIPO 4 (05_04)
 def test_boletim_37():
     assert (
         Boletim(

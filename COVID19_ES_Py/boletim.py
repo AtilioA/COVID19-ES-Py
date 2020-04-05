@@ -333,7 +333,50 @@ class Boletim:
         """Carrega tabela do boletim e extrai número de casos.
         Preenche os dicionários `casos` e `totalGeral`."""
 
-        if 20 < self.n < 37:
+        if self.n == 24:
+            tabela = self.carrega_tabela_boletim()
+
+            # Exclui header (primeira linha) e total (última linha)
+            for linha in tabela[2:-2]:
+                dadoslinha = list(
+                    map(lambda linha: linha.text.strip(), linha.find_all("td")))
+
+                try:
+                    if dadoslinha[1].isdigit() and dadoslinha[0] != "Total":
+                        print(dadoslinha)
+                        municipio = dadoslinha[0]
+                        self.casos[municipio] = {
+                            "casosConfirmados": unicodedata.normalize(
+                                "NFKD", dadoslinha[1]
+                            ).replace(" ", "0"),
+                            "casosDescartados": unicodedata.normalize(
+                                "NFKD", dadoslinha[2]
+                            ).replace(" ", "0"),
+                            "casosSuspeitos": unicodedata.normalize(
+                                "NFKD", dadoslinha[3]
+                            ).replace(" ", "0"),
+                            "totalCasos": unicodedata.normalize("NFKD", dadoslinha[4]).replace(
+                                " ", "0"
+                            ),
+                        }
+
+                    dadosTotalGeral = list(
+                        map(
+                            lambda linha: unicodedata.normalize(
+                                "NFKD", linha.text.strip()),
+                            tabela[-2].find_all("td"),
+                        )
+                    )
+                    self.totalGeral = {
+                        "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
+                        "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
+                        "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
+                        "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
+                    }
+                except IndexError:
+                    pass
+
+        elif 24 < self.n < 37:
             tabela = self.carrega_tabela_boletim()
 
             # Exclui header (primeira linha) e total (última linha)

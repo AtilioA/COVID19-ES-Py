@@ -367,6 +367,57 @@ def test_boletim_32():
     )
 
 
+def test_boletim_37():
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
+        ).casos["Vitória"]["casosConfirmados"]
+        == "43"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
+        ).casos["Vitória"]["obitos"]
+        == "2"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
+        ).casos["Vila Velha"]["casosConfirmados"]
+        == "50"
+    )
+
+    # assert (
+    #     Boletim(
+    #         "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
+    #     ).casos["Vila Velha"]["obitos"]
+    #     == "2"
+    # )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
+        ).casos["Linhares"]["casosConfirmados"]
+        == "8"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
+        ).casos["Atílio Vivacqua"]["casosConfirmados"]
+        == "0"
+    )
+
+    # assert (
+    #     Boletim(
+    #         "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
+    #     ).casos["São Mateus"]["obitos"]
+    #     == "1"
+    # )
+
+
 def test_fail():
     with pytest.raises(TypeError):
         Boletim(37503003)

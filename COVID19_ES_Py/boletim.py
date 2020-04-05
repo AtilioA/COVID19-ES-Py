@@ -333,7 +333,7 @@ class Boletim:
         """Carrega tabela do boletim e extrai número de casos.
         Preenche os dicionários `casos` e `totalGeral`."""
 
-        if self.n > 20:
+        if 20 < self.n < 37:
             tabela = self.carrega_tabela_boletim()
 
             # Exclui header (primeira linha) e total (última linha)
@@ -368,6 +368,45 @@ class Boletim:
                 "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
                 "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
                 "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
+            }
+
+        elif self.n >= 37:
+            tabela = self.carrega_tabela_boletim()
+
+            # Exclui header (primeira linha) e total (última linha)
+            for linha in tabela[1:-1]:
+                dadoslinha = list(
+                    map(lambda linha: linha.text, linha.find_all("td")))
+                municipio = dadoslinha[0]
+
+                self.casos[municipio] = {
+                    "casosConfirmados": unicodedata.normalize(
+                        "NFKD", dadoslinha[1]
+                    ).replace(" ", "0"),
+                    "casosDescartados": unicodedata.normalize(
+                        "NFKD", dadoslinha[2]
+                    ).replace(" ", "0"),
+                    "casosSuspeitos": unicodedata.normalize(
+                        "NFKD", dadoslinha[3]
+                    ).replace(" ", "0"),
+                    "totalCasos": unicodedata.normalize("NFKD", dadoslinha[4]).replace(" ", "0"),
+                    "obitos": unicodedata.normalize(
+                        "NFKD", dadoslinha[5]
+                    ).replace(" ", "0")
+                }
+
+            dadosTotalGeral = list(
+                map(
+                    lambda linha: unicodedata.normalize("NFKD", linha.text),
+                    tabela[-1].find_all("td"),
+                )
+            )
+            self.totalGeral = {
+                "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
+                "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
+                "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
+                "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
+                "totalObitos": unicodedata.normalize("NFKD", dadosTotalGeral[5]),
             }
 
         else:

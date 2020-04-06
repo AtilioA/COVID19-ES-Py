@@ -12,20 +12,27 @@
   <br>
   COVID19-ES-Py
   <br>
+</h1>
+
+<h4 align="center">API em Python para consulta de casos de COVID-19 no estado do Espírito Santo.</h4>
+
+<h5 align="center">
 
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/COVID19-ES-Py.svg)](https://pypi.python.org/pypi/COVID19-ES-Py/) ![PyPI](https://img.shields.io/pypi/v/COVID19-ES-Py) ![Travis (.org)](https://img.shields.io/travis/AtilioA/COVID19-ES-Py) ![Read the Docs](https://img.shields.io/readthedocs/covid19-es-py) ![Codecov](https://img.shields.io/codecov/c/github/atilioa/covid19-es-py) ![Codacy grade](https://img.shields.io/codacy/grade/fcb128b62ff64a8ab51da5629bb11556)
 
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/covid19-es-py) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-<h4 align="center">API em Python para consulta de casos de COVID-19 no estado do Espírito Santo.</h4>
+</h5>
 
 <p align="center">
   <a href="#recursos">Recursos</a> |
   <a href="#instalação">Instalação</a> |
   <a href="#como-usar">Como usar</a> |
   <a href="#exemplos">Exemplos</a> |
+  <a href="#documentação">Documentação</a> |
   <a href="#considerações-finais">Considerações finais</a>
 </p>
+
 
 # Recursos
 * Extração de URLs de boletins emitidos pela Secretaria de Estado da Saúde (SESA)

@@ -125,7 +125,8 @@ def test_boletim_24():
         == "0"
     )
 
-# TABELA TIPO 2 (23_03)
+
+# TABELA TIPO 3 (23_03)
 def test_boletim_25():
     assert (
         Boletim(
@@ -156,7 +157,6 @@ def test_boletim_25():
     )
 
 
-# TABELAS TIPO 3
 def test_boletim_26():
     assert (
         Boletim(
@@ -273,7 +273,7 @@ def test_boletim_29():
         Boletim(
             "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-29o-boletim-de-covid-19"
         ).casos["Atílio Vivácqua"]["casosConfirmados"]
-        == "00"
+        == "0"
     )
 
 
@@ -366,7 +366,8 @@ def test_boletim_32():
         == "0"
     )
 
-# TABELA TIPO 4 (05_04)
+
+# TABELA TIPO 4 (04_04)
 def test_boletim_37():
     assert (
         Boletim(
@@ -389,12 +390,12 @@ def test_boletim_37():
         == "50"
     )
 
-    # assert (
-    #     Boletim(
-    #         "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
-    #     ).casos["Vila Velha"]["obitos"]
-    #     == "2"
-    # )
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
+        ).casos["Vila Velha"]["obitos"]
+        == "2"
+    )
 
     assert (
         Boletim(
@@ -410,12 +411,63 @@ def test_boletim_37():
         == "0"
     )
 
-    # assert (
-    #     Boletim(
-    #         "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
-    #     ).casos["São Mateus"]["obitos"]
-    #     == "1"
-    # )
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-37o-boletim-da-covid-19"
+        ).casos["São Mateus"]["obitos"]
+        == "1"
+    )
+
+
+def test_boletim_38():
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-38o-boletim-da-covid-19"
+        ).casos["Vitória"]["casosConfirmados"]
+        == "62"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-38o-boletim-da-covid-19"
+        ).casos["Vitória"]["obitos"]
+        == "2"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-38o-boletim-da-covid-19"
+        ).casos["Vila Velha"]["casosConfirmados"]
+        == "53"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-38o-boletim-da-covid-19"
+        ).casos["Vila Velha"]["obitos"]
+        == "2"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-38o-boletim-da-covid-19"
+        ).casos["Linhares"]["casosConfirmados"]
+        == "8"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-38o-boletim-da-covid-19"
+        ).casos["Atílio Vivacqua"]["casosConfirmados"]
+        == "0"
+    )
+
+    assert (
+        Boletim(
+            "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-38o-boletim-da-covid-19"
+        ).casos["São Mateus"]["obitos"]
+        == "1"
+    )
 
 
 def test_fail():

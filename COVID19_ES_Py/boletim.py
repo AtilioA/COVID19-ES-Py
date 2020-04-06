@@ -10,7 +10,7 @@ import unicodedata
 import requests
 import arrow
 from bs4 import BeautifulSoup
-from .utils import remove_caracteres_especiais, MUNICIPIOS
+from .utils import trata_entradas_tabela, remove_caracteres_especiais, MUNICIPIOS
 from .exceptions import BoletimError
 
 DOMINIO_FEED = "https://coronavirus.es.gov.br/Noticias"
@@ -59,7 +59,7 @@ class ScraperBoletim:
         if URLPagina:
             req = requests.get(URLPagina)
         elif self.URLFeedBoletins:  # pragma: no cover
-            req = requests.get(self.URLFeedBoletins)  # pragma: no cover
+            req = requests.get(self.URLFeedBoletins)
         else:
             req = requests.get(
                 "https://coronavirus.es.gov.br/Noticias")  # pragma: no cover
@@ -71,7 +71,7 @@ class ScraperBoletim:
             return html
         else:
             mainLogger.error(  # pragma: no cover
-                f"Requisição falhou para {req.url}")  # pragma: no cover
+                f"Requisição falhou para {req.url}")
 
     def extrai_boletins_pagina(self, URLPagina=None, html=None):
         """Extrai as URLs dos boletins presentes em uma página do feed de boletins.
@@ -162,6 +162,18 @@ class ScraperBoletim:
         return Boletim(urlBoletim)
 
     def pesquisa_boletim_data(self, data):
+        """Realiza pesquisa de boletim por data de publicação.
+
+        Parameters
+        ----------
+        data : ``str``
+            A data de publicação do boletim a ser pesquisado.
+
+        Returns
+        ----------
+        Boletim : ``dict`` ou ``None``
+            O boletim publicado na data especificada ou ``None`` se não houver."""
+
         dataArrow = arrow.get(
             data, ["DD/MM/YYYY", "DD-MM-YYYY",
                    "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
@@ -177,7 +189,7 @@ class ScraperBoletim:
                     f"https://coronavirus.es.gov.br/Noticias?page={i}")
                 content = req.content
                 html = BeautifulSoup(content, "html.parser")
-                if req.status_code == 200:
+                if req.status_code == 200:  # pragma: no cover
                     noticias = html.find_all(
                         "article", class_="noticia")
 
@@ -194,6 +206,9 @@ class ScraperBoletim:
                                 matchData.group(0), "DD/MM/YYYY")
                             if dataBoletim == dataArrow:
                                 return Boletim(urljoin(DOMINIO_BOLETINS, linkBoletim))
+                else:
+                    mainLogger.error(  # pragma: no cover
+                    f"Requisição falhou para {req.url}")
         return None
 
 
@@ -248,7 +263,7 @@ class Boletim:
         self.nMunicipiosInfectados = self.conta_municipios_infectados()
 
     def __str__(self):
-        return f"Boletim nº {self.n} - { self.pega_dataPublicacao_formatada()}.\nURL: {self.url}\n{self.nMunicipiosComCasos} municípios com possíveis casos.\nTotal ES: {self.totalGeral}"  # pragma: no cover
+        return f"Boletim nº {self.n} - { self.pega_dataPublicacao_formatada()}.\nURL: {self.url}\n{self.nMunicipiosInfectados} municípios com casos confirmados.\nTotal ES: {self.totalGeral}"  # pragma: no cover
 
     def pega_dataPublicacao_formatada(self):
         """Formata o objeto Arrow com data de publicação para o formato usual dos boletins."""
@@ -305,7 +320,13 @@ class Boletim:
         """Extrai o corpo de texto do HTML do boletim."""
 
         corpo = self.html.find("div", class_="clearfix body-part")
-        stringCorpo = corpo.find("p").text
+
+        stringCorpo = ""
+        for p in corpo.find_all("p"):
+            if "13.709/2018" not in p.text:
+                stringCorpo = f"{stringCorpo}\n{p.text}"
+            else:
+                break
 
         return stringCorpo
 
@@ -329,171 +350,184 @@ class Boletim:
 
         return self.html.find(class_="clearfix body-part").find_all("tr")
 
+    def carrega_casos_19_03(self):
+        """Extrai número de casos das tabelas dos boletins tipo 1 (19/03/2020)."""
+
+        tabela = self.carrega_tabela_boletim()
+
+        regioes = ["Central", "Metropolitana", "Norte", "Sul"]
+        # Exclui header (primeira linha) e total (última linha)
+        for linha in tabela[1:-1]:
+            dadosLinha = [
+                elemento for elemento in list(
+                    map(lambda linha: linha.text.strip(), linha.find_all("p"))
+                )
+                if elemento not in regioes
+            ]
+            municipio = dadosLinha[0]
+
+            self.casos[municipio] = {
+                "casosConfirmados": unicodedata.normalize(
+                    "NFKD", dadosLinha[4]
+                ).replace(" ", "0"),
+                "casosDescartados": unicodedata.normalize(
+                    "NFKD", dadosLinha[3]
+                ).replace(" ", "0"),
+                "casosSuspeitos": unicodedata.normalize(
+                    "NFKD", dadosLinha[2]
+                ).replace(" ", "0"),
+                "totalCasos": unicodedata.normalize("NFKD", dadosLinha[1]).replace(
+                    " ", "0"
+                ),
+            }
+
+        dadosTotalGeral = list(
+            map(
+                lambda linha: unicodedata.normalize("NFKD", linha.text),
+                tabela[-1].find_all("p"),
+            )
+        )
+        self.totalGeral = {
+            "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
+            "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
+            "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
+            "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
+        }
+
+    def carrega_casos_22_03(self):
+        """Extrai número de casos da tabela do boletim tipo 2 (22/03/2020)."""
+
+        tabela = self.carrega_tabela_boletim()
+
+        # Exclui header (primeira linha) e total (última linha)
+        for linha in tabela[2:-2]:
+            dadosLinha = list(
+                map(lambda linha: linha.text.strip(), linha.find_all("td")))
+
+            try:
+                if dadosLinha[1].isdigit() and dadosLinha[0] != "Total":
+                    municipio = dadosLinha[0]
+                    self.casos[municipio] = {
+                        "casosConfirmados": unicodedata.normalize(
+                            "NFKD", dadosLinha[1]
+                        ).replace(" ", "0"),
+                        "casosDescartados": unicodedata.normalize(
+                            "NFKD", dadosLinha[2]
+                        ).replace(" ", "0"),
+                        "casosSuspeitos": unicodedata.normalize(
+                            "NFKD", dadosLinha[3]
+                        ).replace(" ", "0"),
+                        "totalCasos": unicodedata.normalize("NFKD", dadosLinha[4]).replace(
+                            " ", "0"
+                        ),
+                    }
+            except IndexError:
+                pass
+
+        dadosTotalGeral = list(
+            map(
+                lambda linha: unicodedata.normalize(
+                    "NFKD", linha.text.strip()),
+                tabela[-2].find_all("td"),
+            )
+        )
+        self.totalGeral = {
+            "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
+            "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
+            "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
+            "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
+        }
+
+    def carrega_casos_23_03(self):
+        """Extrai número de casos das tabelas dos boletins tipo 3 (23/03/2020)."""
+
+        tabela = self.carrega_tabela_boletim()
+
+        # Exclui header (primeira linha) e total (última linha)
+        for linha in tabela[1:-1]:
+            dadosLinha = list(
+                map(lambda linha: linha.text.strip(), linha.find_all("p")))
+            dadosLinha = trata_entradas_tabela(dadosLinha)
+
+            municipio = dadosLinha[0]
+
+            self.casos[municipio] = {
+                "casosConfirmados": dadosLinha[1],
+                "casosDescartados": dadosLinha[2],
+                "casosSuspeitos": dadosLinha[3],
+                "totalCasos": dadosLinha[4],
+            }
+
+        dadosTotalGeral = list(
+            map(
+                lambda linha: linha.text,
+                tabela[-1].find_all("p"),
+            )
+        )
+        self.totalGeral = {
+            "casosConfirmados": dadosTotalGeral[1],
+            "casosDescartados": dadosTotalGeral[2],
+            "casosSuspeitos": dadosTotalGeral[3],
+            "totalCasos": dadosTotalGeral[4],
+        }
+
+    def carrega_casos_04_04(self):
+        """Extrai número de casos das tabelas dos boletins tipo 4 (04/04/2020)."""
+
+        tabela = self.carrega_tabela_boletim()
+
+        # Exclui header (primeira linha) e total (última linha)
+        for linha in tabela[1:-1]:
+            dadosLinha = list(
+                map(lambda linha: linha.text.strip(), linha.find_all("td")))
+            municipio = dadosLinha[0]
+
+            self.casos[municipio] = {
+                "casosConfirmados": unicodedata.normalize(
+                    "NFKD", dadosLinha[1]
+                ).replace(" ", "0"),
+                "casosDescartados": unicodedata.normalize(
+                    "NFKD", dadosLinha[2]
+                ).replace(" ", "0"),
+                "casosSuspeitos": unicodedata.normalize(
+                    "NFKD", dadosLinha[3]
+                ).replace(" ", "0"),
+                "totalCasos": unicodedata.normalize("NFKD", dadosLinha[4]).replace(" ", "0"),
+                "obitos": unicodedata.normalize(
+                    "NFKD", dadosLinha[5]
+                ).replace(" ", "0")
+            }
+
+        dadosTotalGeral = list(
+            map(
+                lambda linha: unicodedata.normalize(
+                    "NFKD", linha.text.strip()),
+                tabela[-1].find_all("td"),
+            )
+        )
+        self.totalGeral = {
+            "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
+            "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
+            "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
+            "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
+            "totalObitos": unicodedata.normalize("NFKD", dadosTotalGeral[5]),
+        }
+
     def carrega_casos_boletim(self):
         """Carrega tabela do boletim e extrai número de casos.
         Preenche os dicionários `casos` e `totalGeral`."""
 
         if 21 <= self.n < 24:
-            tabela = self.carrega_tabela_boletim()
-
-            regioes = ["Central", "Metropolitana", "Norte", "Sul"]
-            # Exclui header (primeira linha) e total (última linha)
-            for linha in tabela[1:-1]:
-                dadosLinha = [
-                    elemento for elemento in list(
-                        map(lambda linha: linha.text.strip(), linha.find_all("p"))
-                    )
-                    if elemento not in regioes
-                ]
-                municipio = dadosLinha[0]
-                print(dadosLinha)
-
-                self.casos[municipio] = {
-                    "casosConfirmados": unicodedata.normalize(
-                        "NFKD", dadosLinha[4]
-                    ).replace(" ", "0"),
-                    "casosDescartados": unicodedata.normalize(
-                        "NFKD", dadosLinha[3]
-                    ).replace(" ", "0"),
-                    "casosSuspeitos": unicodedata.normalize(
-                        "NFKD", dadosLinha[2]
-                    ).replace(" ", "0"),
-                    "totalCasos": unicodedata.normalize("NFKD", dadosLinha[1]).replace(
-                        " ", "0"
-                    ),
-                }
-
-            dadosTotalGeral = list(
-                map(
-                    lambda linha: unicodedata.normalize("NFKD", linha.text),
-                    tabela[-1].find_all("p"),
-                )
-            )
-            self.totalGeral = {
-                "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
-                "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
-                "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
-                "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
-            }
+            self.carrega_casos_19_03()
 
         elif self.n == 24:
-            tabela = self.carrega_tabela_boletim()
-
-            # Exclui header (primeira linha) e total (última linha)
-            for linha in tabela[2:-2]:
-                dadosLinha = list(
-                    map(lambda linha: linha.text.strip(), linha.find_all("td")))
-
-                try:
-                    if dadosLinha[1].isdigit() and dadosLinha[0] != "Total":
-                        print(dadosLinha)
-                        municipio = dadosLinha[0]
-                        self.casos[municipio] = {
-                            "casosConfirmados": unicodedata.normalize(
-                                "NFKD", dadosLinha[1]
-                            ).replace(" ", "0"),
-                            "casosDescartados": unicodedata.normalize(
-                                "NFKD", dadosLinha[2]
-                            ).replace(" ", "0"),
-                            "casosSuspeitos": unicodedata.normalize(
-                                "NFKD", dadosLinha[3]
-                            ).replace(" ", "0"),
-                            "totalCasos": unicodedata.normalize("NFKD", dadosLinha[4]).replace(
-                                " ", "0"
-                            ),
-                        }
-
-                    dadosTotalGeral = list(
-                        map(
-                            lambda linha: unicodedata.normalize(
-                                "NFKD", linha.text.strip()),
-                            tabela[-2].find_all("td"),
-                        )
-                    )
-                    self.totalGeral = {
-                        "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
-                        "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
-                        "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
-                        "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
-                    }
-                except IndexError:
-                    pass
+            self.carrega_casos_22_03()
 
         elif 24 < self.n < 37:
-            tabela = self.carrega_tabela_boletim()
-
-            # Exclui header (primeira linha) e total (última linha)
-            for linha in tabela[1:-1]:
-                dadosLinha = list(
-                    map(lambda linha: linha.text, linha.find_all("p")))
-                municipio = dadosLinha[0]
-
-                self.casos[municipio] = {
-                    "casosConfirmados": unicodedata.normalize(
-                        "NFKD", dadosLinha[1]
-                    ).replace(" ", "0"),
-                    "casosDescartados": unicodedata.normalize(
-                        "NFKD", dadosLinha[2]
-                    ).replace(" ", "0"),
-                    "casosSuspeitos": unicodedata.normalize(
-                        "NFKD", dadosLinha[3]
-                    ).replace(" ", "0"),
-                    "totalCasos": unicodedata.normalize("NFKD", dadosLinha[4]).replace(
-                        " ", "0"
-                    ),
-                }
-
-            dadosTotalGeral = list(
-                map(
-                    lambda linha: unicodedata.normalize("NFKD", linha.text),
-                    tabela[-1].find_all("p"),
-                )
-            )
-            self.totalGeral = {
-                "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
-                "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
-                "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
-                "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
-            }
+            self.carrega_casos_23_03()
 
         elif self.n >= 37:
-            tabela = self.carrega_tabela_boletim()
-
-            # Exclui header (primeira linha) e total (última linha)
-            for linha in tabela[1:-1]:
-                dadosLinha = list(
-                    map(lambda linha: linha.text, linha.find_all("td")))
-                municipio = dadosLinha[0]
-
-                self.casos[municipio] = {
-                    "casosConfirmados": unicodedata.normalize(
-                        "NFKD", dadosLinha[1]
-                    ).replace(" ", "0"),
-                    "casosDescartados": unicodedata.normalize(
-                        "NFKD", dadosLinha[2]
-                    ).replace(" ", "0"),
-                    "casosSuspeitos": unicodedata.normalize(
-                        "NFKD", dadosLinha[3]
-                    ).replace(" ", "0"),
-                    "totalCasos": unicodedata.normalize("NFKD", dadosLinha[4]).replace(" ", "0"),
-                    "obitos": unicodedata.normalize(
-                        "NFKD", dadosLinha[5]
-                    ).replace(" ", "0")
-                }
-
-            dadosTotalGeral = list(
-                map(
-                    lambda linha: unicodedata.normalize("NFKD", linha.text),
-                    tabela[-1].find_all("td"),
-                )
-            )
-            self.totalGeral = {
-                "casosConfirmados": unicodedata.normalize("NFKD", dadosTotalGeral[1]),
-                "casosDescartados": unicodedata.normalize("NFKD", dadosTotalGeral[2]),
-                "casosSuspeitos": unicodedata.normalize("NFKD", dadosTotalGeral[3]),
-                "totalCasos": unicodedata.normalize("NFKD", dadosTotalGeral[4]),
-                "totalObitos": unicodedata.normalize("NFKD", dadosTotalGeral[5]),
-            }
+            self.carrega_casos_04_04()
 
         else:
             mainLogger.error(
@@ -504,7 +538,7 @@ class Boletim:
             )
 
     def conta_municipios_com_casos(self):
-        """Conta o número de municípios com algum caso registrado, confirmado ou não."""
+        """Retorna o número de municípios com algum caso registrado, confirmado ou não."""
 
         municipiosComCasos = 0
         linhasTabela = self.casos.keys()
@@ -516,7 +550,7 @@ class Boletim:
         return municipiosComCasos
 
     def conta_municipios_infectados(self):
-        """Conta o número de municípios com algum caso confirmado."""
+        """Retorna o número de municípios com algum caso confirmado."""
 
         municipiosInfectados = 0
         linhasTabela = self.casos.keys()
@@ -571,17 +605,19 @@ class Boletim:
             municipio = list(self.casos.keys())[indiceMunicipio]
             return self.casos[municipio]
 
-    def filtra_municipios_com_casos(self):
-        municipiosComCasos = {
-            municipio: self.casos[municipio]["casosConfirmados"]
+    def filtra_municipios_com_casos_confirmados(self):
+        """Filtra o dicionário de casos por municípios com casos confirmados.
+
+        Returns
+        ----------
+        municipiosComCasosConfirmados : ``dict``
+            O dicionário de municípios com casos confirmados no estado."""
+
+        municipiosComCasosConfirmados = {
+            municipio: self.casos[municipio]
             for (municipio, casos) in self.casos.items()
             if int(self.casos[municipio]["casosConfirmados"]) > 0
             and remove_caracteres_especiais(municipio).upper() in MUNICIPIOS
         }
 
-        return municipiosComCasos
-
-
-boletim = Boletim(
-    "https://coronavirus.es.gov.br/Not%C3%ADcia/secretaria-da-saude-divulga-23o-boletim-de-covid-19")
-print(boletim, boletim.totalGeral, boletim.casos)
+        return municipiosComCasosConfirmados

@@ -1,6 +1,7 @@
 """O módulo `utils.py` contém funções e constantes auxiliares."""
 
 import unicodedata
+import re
 
 
 MUNICIPIOS = [
@@ -83,6 +84,16 @@ MUNICIPIOS = [
     'VILA VELHA',
     'VITORIA'
 ]
+
+
+def trata_entradas_tabela(linha):
+    """ Substitui caracteres vazios de uma lista por zeros.
+    Utilizada para tratar valores das colunas das tabelas dos boletins."""
+
+    patternEntradasInvalidas = re.compile(r"\xa0|&nbsp;|^\s*$|\s*-\s*")
+    linha = map(lambda coluna: re.sub(
+        patternEntradasInvalidas, "0", coluna), linha)
+    return list(linha)
 
 
 def remove_caracteres_especiais(stringEntrada):

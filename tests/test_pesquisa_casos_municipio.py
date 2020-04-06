@@ -22,7 +22,7 @@ def test_27_03():
     assert(boletim.pesquisa_casos_municipio("AFONSO CLAUDIO") == {
            'casosConfirmados': '0',
            'casosDescartados': '1',
-           'casosSuspeitos': '00',
+           'casosSuspeitos': '0',
            'totalCasos': '1'
            })
 

@@ -1,4 +1,4 @@
-"""Scraper de boletins de casos de COVID-19 no Espírito Santo
+"""Scraper de boletins de casos de COVID-19 no Espírito Santo.
     >>> import COVID19_ES_Py
     >>> scraper = COVID19_ES_Py.ScraperBoletim()
     >>> boletim = scraper.carrega_ultimo_boletim()

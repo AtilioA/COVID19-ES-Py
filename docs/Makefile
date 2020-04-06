@@ -9,6 +9,10 @@ SOURCEDIR     = .
 BUILDDIR      = _build
 
 # Put it first so that "make" without argument is like "make help".
+
+apidoc:
+	sphinx-apidoc -o . ..\COVID19_ES_Py\ --force
+
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 

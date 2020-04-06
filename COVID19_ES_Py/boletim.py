@@ -168,6 +168,8 @@ class ScraperBoletim:
         ----------
         data : ``str``
             A data de publicação do boletim a ser pesquisado.
+            Formatos de data aceitos:
+            "DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY".
 
         Returns
         ----------

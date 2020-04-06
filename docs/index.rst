@@ -14,7 +14,6 @@ Início
 * :ref:`search`
 
 
-
 .. raw:: html
 
    <h1 align="center">
@@ -41,12 +40,10 @@ Início
 .. image:: https://img.shields.io/readthedocs/covid19-es-py
    :alt: Read The Docs
 
-.. image:: https://img.shields.io/codecov/c/github/atilioa/covid19-es-py?color=green
+.. image:: https://img.shields.io/codecov/c/github/atilioa/covid19-es-py
    :alt: Codecov
-
-.. image:: http://hits.dwyl.com/atilioa/COVID19-ES-Py.svg
-   :target: http://hits.dwyl.com/atilioa/COVID19-ES-Py
-   :alt: HitCount
+.. image:: https://img.shields.io/codacy/grade/fcb128b62ff64a8ab51da5629bb11556
+   :alt: Codacy grade
 
 .. image:: https://img.shields.io/pypi/dm/covid19-es-py
    :target: https://img.shields.io/pypi/dm/covid19-es-py
@@ -60,7 +57,6 @@ Início
 .. raw:: html
 
    <h4 align="center">API em Python para consulta de casos de COVID-19 no estado do Espírito Santo.</h4>
-
 
 
 .. raw:: html

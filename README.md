@@ -6,6 +6,7 @@
   COVID19-ES-Py
   <br>
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/05b810f70532448ea2c6da76b8dd5f17)](https://app.codacy.com/manual/atiliodadalto/COVID19-ES-Py?utm_source=github.com&utm_medium=referral&utm_content=AtilioA/COVID19-ES-Py&utm_campaign=Badge_Grade_Dashboard)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/COVID19-ES-Py.svg)](https://pypi.python.org/pypi/COVID19-ES-Py/) ![PyPI](https://img.shields.io/pypi/v/COVID19-ES-Py) ![Travis (.org)](https://img.shields.io/travis/AtilioA/COVID19-ES-Py) ![Read the Docs](https://img.shields.io/readthedocs/covid19-es-py) ![Codacy grade](https://img.shields.io/codacy/grade/2a7bb708cf374f2badcdbe30b5342377) ![Codecov](https://img.shields.io/codecov/c/github/atilioa/covid19-es-py)
 
 [![HitCount](http://hits.dwyl.com/atilioa/COVID19-ES-Py.svg)](http://hits.dwyl.com/atilioa/COVID19-ES-Py) ![PyPI - Downloads](https://img.shields.io/pypi/dm/covid19-es-py) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)

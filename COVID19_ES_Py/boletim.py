@@ -210,7 +210,8 @@ class ScraperBoletim:
                                 return Boletim(urljoin(DOMINIO_BOLETINS, linkBoletim))
                 else:
                     mainLogger.error(  # pragma: no cover
-                    f"Requisição falhou para {req.url}")
+                        f"Requisição falhou para {req.url}")
+                i += 1
         return None
 
 
@@ -366,6 +367,7 @@ class Boletim:
                 )
                 if elemento not in regioes
             ]
+            dadosLinha = trata_entradas_tabela(dadosLinha)
             municipio = dadosLinha[0]
 
             self.casos[municipio] = {
@@ -403,7 +405,7 @@ class Boletim:
 
         # Exclui header (primeira linha) e total (última linha)
         for linha in tabela[2:-2]:
-            dadosLinha = list(
+            dadosLinha = trata_entradas_tabela(
                 map(lambda linha: linha.text.strip(), linha.find_all("td")))
 
             try:
@@ -447,10 +449,8 @@ class Boletim:
 
         # Exclui header (primeira linha) e total (última linha)
         for linha in tabela[1:-1]:
-            dadosLinha = list(
+            dadosLinha = trata_entradas_tabela(
                 map(lambda linha: linha.text.strip(), linha.find_all("p")))
-            dadosLinha = trata_entradas_tabela(dadosLinha)
-
             municipio = dadosLinha[0]
 
             self.casos[municipio] = {
@@ -480,7 +480,7 @@ class Boletim:
 
         # Exclui header (primeira linha) e total (última linha)
         for linha in tabela[1:-1]:
-            dadosLinha = list(
+            dadosLinha = trata_entradas_tabela(
                 map(lambda linha: linha.text.strip(), linha.find_all("td")))
             municipio = dadosLinha[0]
 

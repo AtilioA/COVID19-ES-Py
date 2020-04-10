@@ -4,7 +4,7 @@ from requests.exceptions import MissingSchema
 from COVID19_ES_Py import Boletim, exceptions
 
 
-# - TABELAS TIPO 1 (19_03)
+# - TABELAS TIPO 1 (19/03/2020)
 def test_boletim_21():
     assert (
         Boletim(
@@ -95,7 +95,7 @@ def test_boletim_23():
     )
 
 
-# TABELA TIPO 2 (22_03)
+# TABELA TIPO 2 (22/03/2020)
 def test_boletim_24():
     assert (
         Boletim(
@@ -126,7 +126,7 @@ def test_boletim_24():
     )
 
 
-# TABELA TIPO 3 (23_03)
+# TABELA TIPO 3 (23/03/2020)
 def test_boletim_25():
     assert (
         Boletim(
@@ -367,7 +367,7 @@ def test_boletim_32():
     )
 
 
-# TABELA TIPO 4 (04_04)
+# TABELA TIPO 4 (04/04/2020)
 def test_boletim_37():
     assert (
         Boletim(

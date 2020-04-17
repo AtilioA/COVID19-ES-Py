@@ -14,7 +14,7 @@ requests = "*"
 arrow = "*"
 pytest-cov = "*"
 coverage = "*"
-selenium = "*"
+rows = "0.4.2"
 
 [requires]
 python_version = "3.7"

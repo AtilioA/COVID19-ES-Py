@@ -10,8 +10,8 @@ import unicodedata
 import requests
 import arrow
 from bs4 import BeautifulSoup
-from .utils import trata_entradas_tabela, remove_caracteres_especiais, MUNICIPIOS
-from .exceptions import BoletimError
+from COVID19_ES_Py.utils import trata_entradas_tabela, remove_caracteres_especiais, MUNICIPIOS
+from COVID19_ES_Py.exceptions import BoletimError
 
 DOMINIO_FEED = "https://coronavirus.es.gov.br/Noticias"
 DOMINIO_BOLETINS = "https://coronavirus.es.gov.br/"

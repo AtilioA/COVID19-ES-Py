@@ -5,7 +5,7 @@ import requests
 import rows
 import arrow
 
-from .utils import MUNICIPIOS, remove_caracteres_especiais
+from COVID19_ES_Py.utils import MUNICIPIOS, remove_caracteres_especiais
 
 URL_RELATORIO_CSV = "https://bi.static.es.gov.br/covid19/MICRODADOS.csv"
 
@@ -56,23 +56,43 @@ class Municipio():
 
 
 class Caso():
-    def __init__(self, data=None, faixaEtaria=None, sexo=None, racaCor=None, escolaridade=None, classificacao=None, evolucao=None, criterioClassificacao=None, statusNotificacao=None, municipio=None, bairro=None, sintomas=None, comorbidades=None, ficouInternado=None, viagemBrasil=None, viagemInternacional=None):
-        self.data = data
-        self.classificacao = classificacao
-        self.evolucao = evolucao
-        self.criterioClassificacao = criterioClassificacao
-        self.statusNotificacao = statusNotificacao
-        self.municipio = municipio
-        self.bairro = bairro
-        self.faixaEtaria = faixaEtaria
-        self.sexo = sexo
-        self.racaCor = racaCor
-        self.escolaridade = escolaridade
-        self.sintomas = sintomas
-        self.comorbidades = comorbidades
-        self.ficouInternado = ficouInternado
-        self.viagemBrasil = viagemBrasil
-        self.viagemInternacional = viagemInternacional
+    def __init__(self,
+                 dados=None,
+                 data=None,
+                 faixaEtaria=None,
+                 sexo=None,
+                 racaCor=None,
+                 escolaridade=None,
+                 classificacao=None,
+                 evolucao=None,
+                 criterioClassificacao=None,
+                 statusNotificacao=None,
+                 municipio=None,
+                 bairro=None,
+                 sintomas=None,
+                 comorbidades=None,
+                 ficouInternado=None,
+                 viagemBrasil=None,
+                 viagemInternacional=None):
+        if dados:
+            self.carrega_dados_linha(dados)
+        else:
+            self.data = data
+            self.classificacao = classificacao
+            self.evolucao = evolucao
+            self.criterioClassificacao = criterioClassificacao
+            self.statusNotificacao = statusNotificacao
+            self.municipio = municipio
+            self.bairro = bairro
+            self.faixaEtaria = faixaEtaria
+            self.sexo = sexo
+            self.racaCor = racaCor
+            self.escolaridade = escolaridade
+            self.sintomas = sintomas
+            self.comorbidades = comorbidades
+            self.ficouInternado = ficouInternado
+            self.viagemBrasil = viagemBrasil
+            self.viagemInternacional = viagemInternacional
 
     def __str__(self):
         return f"Caso de {self.data} - {self.classificacao} em {self.municipio}"
@@ -119,24 +139,25 @@ class Relatorio():
             self.csv = caminhoCSV
             self.rows = rows.import_from_csv(self.csv)
         else:
-            self.csv = requests.get(URL_RELATORIO_CSV).content
-            self.rows = rows.import_from_csv(BytesIO(self.csv))
+            self.csv = URL_RELATORIO_CSV
+            self.rows = rows.import_from_csv(BytesIO(requests.get(self.csv).content))
+
         self.casosMunicipios = {}
         self.inicializa_dicionario_municipios()
+        self.importadosOuIndefinidos = {
+            'casosConfirmados': 0,
+            'obitos': 0
+        }
+
         self.totalGeral = {
-            "casosConfirmados": 0,
-            "obitos": 0
+            'casosConfirmados': 0,
+            'obitos': 0
         }
         self.nMunicipiosInfectados = 0
 
     def inicializa_dicionario_municipios(self):
         for municipio in MUNICIPIOS:
             self.casosMunicipios[municipio] = Municipio(municipio)
-            # {
-            #     "casos": [],
-            #     "casosConfirmados": 0,
-            #     "obitos": 0
-            # }
 
     def filtra_data(self, data):
         dataArrow = arrow.get(data, "DD/MM/YYYY")
@@ -145,27 +166,26 @@ class Relatorio():
 
     def popula_relatorio(self):
         for linha in self.rows:
-            caso = Caso()
-            caso.carrega_dados_linha(linha)
-            if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
-                if caso.classificacao == "Confirmados":
+            caso = Caso(linha)
+            if caso.classificacao == "Confirmados":
+                if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
                     if self.casosMunicipios[caso.municipio].casosConfirmados == 0:
                         self.nMunicipiosInfectados += 1
-                    self.totalGeral['casosConfirmados'] += 1
-                    try:
-                        if (caso.evolucao == "Óbito pelo COVID-19"):
-                            self.totalGeral['obitos'] += 1
-                            self.casosMunicipios[caso.municipio].obitos += 1
-                        self.casosMunicipios[caso.municipio].casos.append(caso)
-                        self.casosMunicipios[caso.municipio].casosConfirmados += 1
-                    except KeyError:
-                        self.casosMunicipios[caso.municipio] = Municipio(
-                            caso.municipio)
-                        if (caso.evolucao == "Óbito pelo COVID-19"):
-                            self.casosMunicipios[caso.municipio].obitos += 1
-                        self.casosMunicipios[caso.municipio].casos.append(caso)
-                        self.casosMunicipios[caso.municipio].casosConfirmados += 1
-                        self.nMunicipiosInfectados += 1
+                    if (caso.evolucao == "Óbito pelo COVID-19"):
+                        self.totalGeral['obitos'] += 1
+                        self.casosMunicipios[caso.municipio].obitos += 1
+                    self.casosMunicipios[caso.municipio].casos.append(caso)
+                    self.casosMunicipios[caso.municipio].casosConfirmados += 1
+                else:
+                    self.importadosOuIndefinidos['casosConfirmados'] += 1
+                    if (caso.evolucao == "Óbito pelo COVID-19"):
+                        self.totalGeral['obitos'] += 1
+                        self.importadosOuIndefinidos['obitos'] += 1
+
+                self.totalGeral['casosConfirmados'] += 1
+                print(self)
 
     def __str__(self):
-        return "Relatório:\nTotal geral: {self.totalGeral}\n{self.nMunicipiosInfectados} municípios infectados."
+        return f"Relatório do arquivo {self.csv}:\nTotal geral: {self.totalGeral}\n{self.nMunicipiosInfectados} municípios infectados."
+
+

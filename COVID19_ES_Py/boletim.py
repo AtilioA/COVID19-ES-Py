@@ -1,5 +1,7 @@
-"""O módulo `boletim.py` é o principal do pacote.
+"""O módulo `boletim.py` foi descontinuado a partir de 14/04/2020, na versão `2.0.0` do `COVID19-ES-Py` e será removido na versão `3.0.0`.
 Nele são introduzidas as classes e métodos utilizados para coletar dados dos boletins emitidos pelo Governo.
+
+Por favor, utilize o módulo `relatorio.py` para obter os dados de COVID-19 no Espírito Santo.
 
 """
 
@@ -8,10 +10,11 @@ from urllib.parse import urljoin
 import logging
 import unicodedata
 import requests
+from deprecated import deprecated
 import arrow
 from bs4 import BeautifulSoup
-from COVID19_ES_Py.utils import trata_dados_tabela, remove_caracteres_especiais, MUNICIPIOS
-from COVID19_ES_Py.exceptions import BoletimError
+from .utils import trata_dados_tabela, remove_caracteres_especiais, MUNICIPIOS
+from .exceptions import BoletimError
 
 DOMINIO_FEED = "https://coronavirus.es.gov.br/Noticias"
 DOMINIO_BOLETINS = "https://coronavirus.es.gov.br/"
@@ -20,16 +23,21 @@ DOMINIO_BOLETINS = "https://coronavirus.es.gov.br/"
 logging.basicConfig(
     format="%(asctime)s %(message)s",
     datefmt="%d/%m/%Y %H:%M:%S",
-    filename="scraperboletim.log",
+    filename="covid19-es-py.log",
     level=logging.DEBUG,
 )
 mainLogger = logging.getLogger(__name__)
 mainLogger.setLevel(logging.DEBUG)
 
 
+@deprecated(version='2.0.0', reason="ScraperBoletim foi descontinuado no COVID19-ES-Py 2.0.0, e será substituído por `LeitorRelatorio` na versão 3.0.0 uma vez que a SESA não emitirá mais boletins de COVID19.")
 class ScraperBoletim:
     """
     Um objeto `ScraperBoletim` é capaz de varrer o feed de boletins em busca de suas URLs.
+
+    .. deprecated:: 2.0.0
+        `ScraperBoletim` foi descontinuado no COVID19-ES-Py 2.0.0, e será substituído por
+        `LeitorRelatorio` uma vez que a SESA não emitirá mais boletins de COVID19.
 
     Attributes
     ----------
@@ -39,7 +47,8 @@ class ScraperBoletim:
         Uma lista com URLs dos boletins (preenchida caso o método `extrai_todos_boletins` seja chamado).
     """
 
-    def __init__(self,):
+    @deprecated(version='2.0.0', reason="ScraperBoletim foi descontinuado no COVID19-ES-Py 2.0.0, e será substituído por `LeitorRelatorio` na versão 3.0.0 uma vez que a SESA não emitirá mais boletins de COVID19.")
+    def __init__(self):
         self.URLFeedBoletins = DOMINIO_FEED
         self.URLsBoletins = None
 
@@ -215,9 +224,14 @@ class ScraperBoletim:
         return None
 
 
+@deprecated(version='2.0.0', reason="Boletim foi descontinuado no COVID19-ES-Py 2.0.0, e será substituído por `Relatorio` na versão 3.0.0 uma vez que a SESA não emitirá mais boletins de COVID19.")
 class Boletim:
     """
     Um objeto `Boletim` é capaz de extrair números de casos de um boletim.
+
+    .. deprecated:: 2.0.0
+        `Boletim` foi descontinuado no COVID19-ES-Py 2.0.0, e será substituído por
+        `Relatorio` uma vez que a SESA não emitirá mais boletins de COVID19.
 
     Parameters
     ----------
@@ -250,6 +264,7 @@ class Boletim:
         O número de municípios com algum caso confirmado.
     """
 
+    @deprecated(version='2.0.0', reason="Boletim foi descontinuado no COVID19-ES-Py 2.0.0, e será substituído por `Relatorio` na versão 3.0.0 uma vez que a SESA não emitirá mais boletins de COVID19.")
     def __init__(self, URLBoletim):
         self.url = URLBoletim
         self.n = self.extrai_numero_boletim()

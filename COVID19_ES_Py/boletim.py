@@ -10,7 +10,7 @@ import unicodedata
 import requests
 import arrow
 from bs4 import BeautifulSoup
-from COVID19_ES_Py.utils import trata_entradas_tabela, remove_caracteres_especiais, MUNICIPIOS
+from COVID19_ES_Py.utils import trata_dados_tabela, remove_caracteres_especiais, MUNICIPIOS
 from COVID19_ES_Py.exceptions import BoletimError
 
 DOMINIO_FEED = "https://coronavirus.es.gov.br/Noticias"
@@ -367,7 +367,7 @@ class Boletim:
                 )
                 if elemento not in regioes
             ]
-            dadosLinha = trata_entradas_tabela(dadosLinha)
+            dadosLinha = trata_dados_tabela(dadosLinha)
             municipio = dadosLinha[0]
 
             self.casos[municipio] = {
@@ -405,7 +405,7 @@ class Boletim:
 
         # Exclui header (primeira linha) e total (última linha)
         for linha in tabela[2:-2]:
-            dadosLinha = trata_entradas_tabela(
+            dadosLinha = trata_dados_tabela(
                 map(lambda linha: linha.text.strip(), linha.find_all("td")))
 
             try:
@@ -449,7 +449,7 @@ class Boletim:
 
         # Exclui header (primeira linha) e total (última linha)
         for linha in tabela[1:-1]:
-            dadosLinha = trata_entradas_tabela(
+            dadosLinha = trata_dados_tabela(
                 map(lambda linha: linha.text.strip(), linha.find_all("p")))
             municipio = dadosLinha[0]
 
@@ -480,7 +480,7 @@ class Boletim:
 
         # Exclui header (primeira linha) e total (última linha)
         for linha in tabela[1:-1]:
-            dadosLinha = trata_entradas_tabela(
+            dadosLinha = trata_dados_tabela(
                 map(lambda linha: linha.text.strip(), linha.find_all("td")))
             municipio = dadosLinha[0]
 

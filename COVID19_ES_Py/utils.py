@@ -2,6 +2,7 @@
 
 import unicodedata
 import re
+import arrow
 
 
 MUNICIPIOS = [
@@ -86,7 +87,37 @@ MUNICIPIOS = [
 ]
 
 
-def trata_entradas_tabela(linha):
+def trata_dados_linha(linha):
+    """ Trata e corrige os valores das linhas dos arquivos csv de relatórios."""
+
+    linha[0] = arrow.get(linha[0], 'DD/MM/YYYY')
+
+    if linha[2] in ["Ignorado", "-"]:
+        linha[2] = None
+    if "-" in linha[3]:
+        linha[3] = None
+    if linha[6] in ["Não encontrado", "NULL"]:
+        linha[6] = None
+    if "Ignorado" in linha[9]:
+        linha[9] = None
+    if "Ignorado" in linha[10]:
+        linha[10] = None
+
+    stringParaBool = {
+        "Sim": True,
+        "Não": False,
+        "-": None,
+        "": None,
+        1: True,
+        2: None,
+    }
+    for i, campo in enumerate(linha[11:]):
+        linha[i + 11] = stringParaBool.get(linha[i + 11], None)
+
+    return linha
+
+
+def trata_dados_tabela(linha):
     """ Substitui caracteres vazios de uma lista por zeros.
     Utilizada para tratar valores das colunas das tabelas dos boletins."""
 

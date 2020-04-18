@@ -15,6 +15,7 @@ arrow = "*"
 pytest-cov = "*"
 coverage = "*"
 rows = {file = "https://github.com/turicas/rows/archive/develop.zip"}
+deprecated = "*"
 
 [requires]
 python_version = "3.7"

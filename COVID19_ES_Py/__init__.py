@@ -1,14 +1,14 @@
-"""Scraper de boletins de casos de COVID-19 no Espírito Santo.
+"""Leitor de relatórios de casos de COVID-19 no Espírito Santo.
     >>> import COVID19_ES_Py
-    >>> scraper = COVID19_ES_Py.ScraperBoletim()
-    >>> boletim = scraper.carrega_ultimo_boletim()
+    >>> leitor = COVID19_ES_Py.LeitorRelatorio()
+    >>> relatorio = leitor.carrega_ultimo_relatorio()
 
 Veja https://github.com/AtilioA/COVID19-ES-Py ou https://covid19-es-py.readthedocs.io/ para mais informações.
 """
 
 # flake8: noqa
-from .boletim import (ScraperBoletim, Boletim)
-from .relatorio import Relatorio
+from .boletim import (ScraperBoletim, Boletim)  # Descontinuado
+from .relatorio import (LeitorRelatorio, Relatorio)
 
 __all__ = [
     'ScraperBoletim',
@@ -16,4 +16,4 @@ __all__ = [
     'Relatorio',
 ]
 
-__version__ = "1.3.1"
+__version__ = "2.0.0"

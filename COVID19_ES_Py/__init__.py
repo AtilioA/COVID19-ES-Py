@@ -8,7 +8,7 @@ Veja https://github.com/AtilioA/COVID19-ES-Py ou https://covid19-es-py.readthedo
 
 # flake8: noqa
 from .boletim import (ScraperBoletim, Boletim)
-from .parse_relatorio_powerbi import Relatorio
+from .relatorio import Relatorio
 
 __all__ = [
     'ScraperBoletim',

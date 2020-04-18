@@ -5,20 +5,19 @@ import requests
 import rows
 import arrow
 
-from utils import MUNICIPIOS, remove_caracteres_especiais
+from .utils import MUNICIPIOS, remove_caracteres_especiais
 
 URL_RELATORIO_CSV = "https://bi.static.es.gov.br/covid19/MICRODADOS.csv"
 
 
 def trata_dados_linha(linha):
-    linha = list(map(lambda x: x.strip(), linha))
     linha[0] = arrow.get(linha[0], 'DD/MM/YYYY')
 
     if linha[2] in ["Ignorado", "-"]:
         linha[2] = None
     if "-" in linha[3]:
         linha[3] = None
-    if "Não encontrado" in linha[6]:
+    if linha[6] in ["Não encontrado", "NULL"]:
         linha[6] = None
     if "Ignorado" in linha[9]:
         linha[9] = None
@@ -31,10 +30,12 @@ def trata_dados_linha(linha):
         "Sim": True,
         "Não": False,
         "-": None,
-        "": None
+        "": None,
+        1: True,
+        2: None,
     }
     for i, campo in enumerate(linha[12:]):
-        linha[i + 12] = stringParaBool[linha[i + 12]]
+        linha[i + 12] = stringParaBool.get(linha[i + 12], None)
 
     return linha
 
@@ -77,7 +78,7 @@ class Caso():
         return f"Caso de {self.data} - {self.classificacao} em {self.municipio}"
 
     def carrega_dados_linha(self, linha):
-        linha = trata_dados_linha(linha)
+        linha = trata_dados_linha(list(linha))
 
         self.data = linha[0]
         self.classificacao = linha[1]
@@ -112,7 +113,7 @@ class Caso():
         self.viagemInternacional = linha[26]
 
 
-class Boletim():
+class Relatorio():
     def __init__(self, caminhoCSV=None):
         if caminhoCSV:
             self.csv = caminhoCSV
@@ -121,25 +122,29 @@ class Boletim():
             self.csv = requests.get(URL_RELATORIO_CSV).content
             self.rows = rows.import_from_csv(BytesIO(self.csv))
         self.casosMunicipios = {}
+        self.inicializa_dicionario_municipios()
         self.totalGeral = {
             "casosConfirmados": 0,
             "obitos": 0
         }
         self.nMunicipiosInfectados = 0
 
+    def inicializa_dicionario_municipios(self):
+        for municipio in MUNICIPIOS:
+            self.casosMunicipios[municipio] = Municipio(municipio)
+            # {
+            #     "casos": [],
+            #     "casosConfirmados": 0,
+            #     "obitos": 0
+            # }
+
     def filtra_data(self, data):
-        filtrado = []
+        dataArrow = arrow.get(data, "DD/MM/YYYY")
 
-        for caso in self.rows[1:]:
-            if data in caso[0] and "Confirmados" in caso[6]:
-                casoObj = Caso()
-                casoObj.carrega_dados_linha(caso)
-                filtrado.append(casoObj)
+        return [caso for caso in self.rows[1:] if dataArrow >= arrow.get(caso[0], "DD/MM/YYYY") and "Confirmados" in caso[1]]
 
-        return filtrado
-
-    def popula_boletim(self):
-        for linha in self.rows[1:]:
+    def popula_relatorio(self):
+        for linha in self.rows:
             caso = Caso()
             caso.carrega_dados_linha(linha)
             if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
@@ -161,12 +166,9 @@ class Boletim():
                         self.nMunicipiosInfectados += 1
 
     def __str__(self):
-        return "Boletim do arquivo '{}'\nTotal geral: {}\n{} municípios infectados.".format(self.csv, self.totalGeral, self.nMunicipiosInfectados)
+        return "Relatorio do arquivo '{}'\nTotal geral: {}\n{} municípios infectados.".format(self.csv, self.totalGeral, self.nMunicipiosInfectados)
 
 
-boletim = Boletim()
-boletim.popula_boletim()
-# print(len(boletim.filtra_data('4/15/2020')))
-for key in sorted(boletim.casosMunicipios.values()):
-    print(key.nome, key.casosConfirmados, key.obitos)
-print(boletim.totalGeral)
+# relatorio = Relatorio()
+# relatorio.rows = relatorio.filtra_data('17/04/2020')
+# relatorio.popula_relatorio()

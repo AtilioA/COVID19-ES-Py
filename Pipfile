@@ -14,7 +14,7 @@ requests = "*"
 arrow = "*"
 pytest-cov = "*"
 coverage = "*"
-rows = "0.4.2"
+rows = {file = "https://github.com/turicas/rows/archive/develop.zip"}
 
 [requires]
 python_version = "3.7"

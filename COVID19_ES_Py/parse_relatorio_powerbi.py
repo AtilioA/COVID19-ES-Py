@@ -149,6 +149,8 @@ class Relatorio():
             caso.carrega_dados_linha(linha)
             if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
                 if caso.classificacao == "Confirmados":
+                    if self.casosMunicipios[caso.municipio].casosConfirmados == 0:
+                        self.nMunicipiosInfectados += 1
                     self.totalGeral['casosConfirmados'] += 1
                     try:
                         if (caso.evolucao == "Óbito pelo COVID-19"):
@@ -166,9 +168,4 @@ class Relatorio():
                         self.nMunicipiosInfectados += 1
 
     def __str__(self):
-        return "Relatorio do arquivo '{}'\nTotal geral: {}\n{} municípios infectados.".format(self.csv, self.totalGeral, self.nMunicipiosInfectados)
-
-
-# relatorio = Relatorio()
-# relatorio.rows = relatorio.filtra_data('17/04/2020')
-# relatorio.popula_relatorio()
+        return "Relatório:\nTotal geral: {self.totalGeral}\n{self.nMunicipiosInfectados} municípios infectados."

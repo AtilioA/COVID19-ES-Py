@@ -90,7 +90,7 @@ MUNICIPIOS = [
 def trata_dados_linha(linha):
     """ Trata e corrige os valores das linhas dos arquivos csv de relatórios."""
 
-    linha[0] = arrow.get(linha[0], 'DD/MM/YYYY')
+    linha[0] = arrow.get(linha[0])
 
     if linha[2] in ["Ignorado", "-"]:
         linha[2] = None

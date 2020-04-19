@@ -278,22 +278,21 @@ class Relatorio():
 
         for linha in self.linhasRelatorio:
             caso = Caso(linha)
-            if caso.classificacao == "Confirmados":
-                if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
-                    if self.casosMunicipios[caso.municipio].casosConfirmados == 0:
-                        self.nMunicipiosInfectados += 1
-                    if (caso.evolucao == "Óbito pelo COVID-19"):
-                        self.totalGeral['obitos'] += 1
-                        self.casosMunicipios[caso.municipio].obitos += 1
-                    self.casosMunicipios[caso.municipio].casos.append(caso)
-                    self.casosMunicipios[caso.municipio].casosConfirmados += 1
-                else:
-                    self.importadosOuIndefinidos['casosConfirmados'] += 1
-                    if (caso.evolucao == "Óbito pelo COVID-19"):
-                        self.totalGeral['obitos'] += 1
-                        self.importadosOuIndefinidos['obitos'] += 1
+            if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
+                if self.casosMunicipios[caso.municipio].casosConfirmados == 0:
+                    self.nMunicipiosInfectados += 1
+                if (caso.evolucao == "Óbito pelo COVID-19"):
+                    self.totalGeral['obitos'] += 1
+                    self.casosMunicipios[caso.municipio].obitos += 1
+                self.casosMunicipios[caso.municipio].casos.append(caso)
+                self.casosMunicipios[caso.municipio].casosConfirmados += 1
+            else:
+                self.importadosOuIndefinidos['casosConfirmados'] += 1
+                if (caso.evolucao == "Óbito pelo COVID-19"):
+                    self.totalGeral['obitos'] += 1
+                    self.importadosOuIndefinidos['obitos'] += 1
 
-                self.totalGeral['casosConfirmados'] += 1
+            self.totalGeral['casosConfirmados'] += 1
         return self
 
     def __str__(self):
@@ -362,8 +361,7 @@ class LeitorRelatorio():
                 data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
             )
             self.relatorio.linhasRelatorio = [
-                caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(
-                    caso[0], "DD/MM/YYYY") and "Confirmados" in caso[1]
+                caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0], "DD/MM/YYYY")
             ]
             return self.relatorio.popula_relatorio()
         else:
@@ -391,8 +389,7 @@ class LeitorRelatorio():
                 data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
             )
             self.relatorio.linhasRelatorio = [
-                caso for caso in self.linhasRelatorio[1:] if dataArrow == arrow.get(
-                    caso[0], "DD/MM/YYYY") and "Confirmados" in caso[1]
+                caso for caso in self.linhasRelatorio[1:] if dataArrow == arrow.get(caso[0], "DD/MM/YYYY")
             ]
             return self.relatorio.popula_relatorio()
         else:
@@ -409,12 +406,3 @@ class LeitorRelatorio():
 leitor = LeitorRelatorio()
 ultimoRelatorio = leitor.carrega_ultimo_relatorio()
 print(ultimoRelatorio)
-
-# print(ultimoRelatorio.busca_casos_municipio("Vitória"))
-# print(ultimoRelatorio.busca_casos_municipio("  santa teresa "))
-# print(ultimoRelatorio.busca_casos_municipio("AFONSO CLAUDIO"))
-
-# relatorio29_03 = leitor.filtra_casos_ate_dia("17.04.2020")
-# print(relatorio29_03)
-# relatorio29_03 = leitor.filtra_casos_no_dia("16-04-2020")
-# print(relatorio29_03)

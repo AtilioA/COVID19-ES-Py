@@ -4,6 +4,7 @@ Nele são introduzidas as classes e métodos utilizados para coletar dados dos r
 """
 
 from functools import total_ordering
+import copy
 
 from pathlib import Path
 from io import BytesIO
@@ -267,7 +268,7 @@ class Relatorio():
                 f"O município '{municipio}' não foi encontrado no relatório. Pode ter ocorrido um erro de digitação ou o município não registrou casos de COVID-19.")
 
     def popula_relatorio(self):
-        """Preenche o Relatorio com as informações presentes em self.linhasRelatorio."""
+        """Preenche o Relatorio com as informações presentes em self.linhasRelatorio e retorna uma cópia do Relatorio."""
 
         self.totalGeral['casosConfirmados'] = 0
         self.totalGeral['obitos'] = 0
@@ -293,7 +294,7 @@ class Relatorio():
                     self.importadosOuIndefinidos['obitos'] += 1
 
             self.totalGeral['casosConfirmados'] += 1
-        return self
+        return copy.deepcopy(self)
 
     def __str__(self):
         return f"Relatório do arquivo {self.csv}:\nTotal geral: {self.totalGeral}\n{self.nMunicipiosInfectados} municípios infectados."
@@ -401,8 +402,3 @@ class LeitorRelatorio():
             return f"Leitor de relatórios carregado com {self.csv}."
         else:
             return f"Leitor de relatórios sem dados para ler."
-
-
-leitor = LeitorRelatorio()
-ultimoRelatorio = leitor.carrega_ultimo_relatorio()
-print(ultimoRelatorio)

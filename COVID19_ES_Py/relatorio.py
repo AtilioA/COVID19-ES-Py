@@ -362,7 +362,7 @@ class LeitorRelatorio():
                 data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
             )
             self.relatorio.linhasRelatorio = [
-                caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0])
+                caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0], ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
             ]
             return self.relatorio.popula_relatorio()
         else:
@@ -390,7 +390,7 @@ class LeitorRelatorio():
                 data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
             )
             self.relatorio.linhasRelatorio = [
-                caso for caso in self.linhasRelatorio[1:] if dataArrow == arrow.get(caso[0])
+                caso for caso in self.linhasRelatorio[1:] if dataArrow == arrow.get(caso[0], ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
             ]
             return self.relatorio.popula_relatorio()
         else:

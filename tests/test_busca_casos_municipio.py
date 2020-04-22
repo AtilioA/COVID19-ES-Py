@@ -8,9 +8,6 @@ def test_18_04():
         Path("tests/relatorios_passados/18-04-2020.csv"))
     relatorio.popula_relatorio()
 
-    print(relatorio.busca_casos_municipio("VITORIA"))
-    print(relatorio)
-
     assert(relatorio.busca_casos_municipio("Vitória").casosConfirmados == 244)
     assert(relatorio.busca_casos_municipio("Vitória").obitos == 9)
 
@@ -30,9 +27,6 @@ def test_20_04():
         Path("tests/relatorios_passados/20-04-2020.csv"))
     relatorio.popula_relatorio()
 
-    print(relatorio.busca_casos_municipio("VITORIA"))
-    print(relatorio)
-
     assert(relatorio.busca_casos_municipio("Vitória").casosConfirmados == 265)
     assert(relatorio.busca_casos_municipio("Vitória").obitos == 9)
 
@@ -51,9 +45,6 @@ def test_21_04():
         Path("tests/relatorios_passados/21-04-2020.csv"))
     relatorio.popula_relatorio()
 
-    print(relatorio.busca_casos_municipio("VITORIA"))
-    print(relatorio)
-
     assert(relatorio.busca_casos_municipio("Vitória").casosConfirmados == 290)
     assert(relatorio.busca_casos_municipio("Vitória").obitos == 9)
 
@@ -71,9 +62,6 @@ def test_22_04():
     relatorio = Relatorio(
         Path("tests/relatorios_passados/22-04-2020.csv"))
     relatorio.popula_relatorio()
-
-    print(relatorio.busca_casos_municipio("VITORIA"))
-    print(relatorio)
 
     assert(relatorio.busca_casos_municipio("Vitória").casosConfirmados == 291)
     assert(relatorio.busca_casos_municipio("Vitória").obitos == 9)

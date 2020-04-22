@@ -294,7 +294,7 @@ class Relatorio():
                     self.importadosOuIndefinidos['obitos'] += 1
 
             self.totalGeral['casosConfirmados'] += 1
-        return copy.deepcopy(self)
+        return copy.copy(self)
 
     def __str__(self):
         return f"Relatório do arquivo {self.csv}:\nTotal geral: {self.totalGeral}\n{self.nMunicipiosInfectados} municípios infectados."
@@ -362,7 +362,7 @@ class LeitorRelatorio():
                 data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
             )
             self.relatorio.linhasRelatorio = [
-                caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0], "DD/MM/YYYY")
+                caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0])
             ]
             return self.relatorio.popula_relatorio()
         else:
@@ -390,7 +390,7 @@ class LeitorRelatorio():
                 data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
             )
             self.relatorio.linhasRelatorio = [
-                caso for caso in self.linhasRelatorio[1:] if dataArrow == arrow.get(caso[0], "DD/MM/YYYY")
+                caso for caso in self.linhasRelatorio[1:] if dataArrow == arrow.get(caso[0])
             ]
             return self.relatorio.popula_relatorio()
         else:

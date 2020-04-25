@@ -29,12 +29,12 @@
 # Recursos
 
 - Extrai dados sobre:
-  - Casos totais no estado
+  - Casos confirmados no estado
   - Critérios de avaliação de casos
   - Status e evolução de casos
-  - Viagens de pacientes
   - Faixa etária, sexo, etnia e grau de escolaridade de pacientes
   - Sintomas e comorbidades de pacientes
+  - Viagens de pacientes
 - Filtro de casos por data
 - Estruturação e busca de casos por município
 
@@ -254,7 +254,7 @@ Você pode aprender mais sobre a API lendo a [documentação oficial](https://co
 
 ## Considerações finais
 
-Os dados são disponibilizados pelo Governo do Estado do Espírito Santo com a Superintendência Estadual de Comunicação Social do Espírito Santo (SECOM) e [podem ser encontrados aqui](https://coronavirus.es.gov.br/Noticias).
+Os dados são disponibilizados pelo Governo do Estado do Espírito Santo com a Superintendência Estadual de Comunicação Social do Espírito Santo (SECOM) e [podem ser encontrados aqui](https://coronavirus.es.gov.br/painel-covid-19-es).
 
 Devido à natureza dos dados, há uma chance considerável de o scraping parar de funcionar a qualquer momento. Para minimizar essa possibilidade, muitos testes automatizados foram escritos; em caso de discrepância, tentarei atualizar o pacote o mais rápido possível.
 

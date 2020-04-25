@@ -52,7 +52,6 @@ setup(
         "wcwidth==0.1.9",
         "wrapt==1.12.1",
         "zipp==3.1.0",
-        "rows @ https://github.com/turicas/rows/archive/develop.zip"
+        "rows"
     ],
-    dependency_links=["https://github.com/turicas/rows/archive/develop.zip#egg=rows"],
 )

@@ -132,4 +132,5 @@ dmypy.json
 ignore/
 *ignore_me*
 *.csv
-!Relatórios passados/*
+!tests/relatorios_passados/*
+relatorio_para_csv.py

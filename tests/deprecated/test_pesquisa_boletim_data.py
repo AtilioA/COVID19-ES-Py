@@ -1,6 +1,6 @@
 import pytest
 import arrow
-from COVID19_ES_Py import ScraperBoletim, Boletim, exceptions
+from COVID19_ES_Py import ScraperBoletim, Boletim
 
 
 scraper = ScraperBoletim()

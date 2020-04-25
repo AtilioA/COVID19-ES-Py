@@ -1,5 +1,5 @@
 import pytest
-from COVID19_ES_Py import ScraperBoletim, Boletim
+from COVID19_ES_Py import ScraperBoletim
 
 scraper = ScraperBoletim()
 

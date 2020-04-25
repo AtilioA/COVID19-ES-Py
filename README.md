@@ -11,7 +11,7 @@
 
 <h5 align="center">
 
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/COVID19-ES-Py.svg)](https://pypi.python.org/pypi/COVID19-ES-Py/) ![PyPI](https://img.shields.io/pypi/v/COVID19-ES-Py) ![Travis (.org)](https://img.shields.io/travis/AtilioA/COVID19-ES-Py) ![Read the Docs](https://img.shields.io/readthedocs/covid19-es-py) ![Codecov](https://img.shields.io/codecov/c/github/atilioa/covid19-es-py) ![Codacy grade](https://img.shields.io/codacy/grade/fcb128b62ff64a8ab51da5629bb11556)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/COVID19-ES-Py.svg)](https://pypi.python.org/pypi/COVID19-ES-Py/) ![PyPI](https://img.shields.io/pypi/v/COVID19-ES-Py) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/atilioa/covid19-es-py) ![Travis (.org)](https://img.shields.io/travis/AtilioA/COVID19-ES-Py)  ![Read the Docs](https://img.shields.io/readthedocs/covid19-es-py) ![Codecov](https://img.shields.io/codecov/c/github/atilioa/covid19-es-py) ![Codacy grade](https://img.shields.io/codacy/grade/fcb128b62ff64a8ab51da5629bb11556)
 
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/covid19-es-py) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -29,12 +29,12 @@
 # Recursos
 
 - Extrai dados sobre:
-  - Casos totais no estado
+  - Casos confirmados no estado
   - Critérios de avaliação de casos
   - Status e evolução de casos
-  - Viagens de pacientes
   - Faixa etária, sexo, etnia e grau de escolaridade de pacientes
   - Sintomas e comorbidades de pacientes
+  - Viagens de pacientes
 - Filtro de casos por data
 - Estruturação e busca de casos por município
 
@@ -254,7 +254,7 @@ Você pode aprender mais sobre a API lendo a [documentação oficial](https://co
 
 ## Considerações finais
 
-Os dados são disponibilizados pelo Governo do Estado do Espírito Santo com a Superintendência Estadual de Comunicação Social do Espírito Santo (SECOM) e [podem ser encontrados aqui](https://coronavirus.es.gov.br/Noticias).
+Os dados são disponibilizados pelo Governo do Estado do Espírito Santo com a Superintendência Estadual de Comunicação Social do Espírito Santo (SECOM) e [podem ser encontrados aqui](https://coronavirus.es.gov.br/painel-covid-19-es).
 
 Devido à natureza dos dados, há uma chance considerável de o scraping parar de funcionar a qualquer momento. Para minimizar essa possibilidade, muitos testes automatizados foram escritos; em caso de discrepância, tentarei atualizar o pacote o mais rápido possível.
 

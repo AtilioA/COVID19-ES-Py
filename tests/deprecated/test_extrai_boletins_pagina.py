@@ -8,7 +8,7 @@ scraper = ScraperBoletim()
 
 
 def test_30_03():
-    with open("tests/html/noticias_30_03.html", "r", encoding="utf-8") as htmlFile:
+    with open("tests/deprecated/html/noticias_30_03.html", "r", encoding="utf-8") as htmlFile:
         html = BeautifulSoup(htmlFile, "html.parser")
         boletinsPagina = scraper.extrai_boletins_pagina(html=html)
         assert(boletinsPagina == [
@@ -26,7 +26,7 @@ def test_30_03():
 
 
 def test_31_03():
-    with open("tests/html/noticias_31_03.html", "r", encoding="utf-8") as htmlFile:
+    with open("tests/deprecated/html/noticias_31_03.html", "r", encoding="utf-8") as htmlFile:
         html = BeautifulSoup(htmlFile, "html.parser")
         boletinsPagina = scraper.extrai_boletins_pagina(html=html)
         assert(boletinsPagina == [

@@ -7,7 +7,7 @@ scraper = ScraperBoletim()
 
 
 def test_30_03():
-    with open("tests/html/noticias_30_03.html", "r", encoding="utf-8") as htmlFile:
+    with open("tests/deprecated/html/noticias_30_03.html", "r", encoding="utf-8") as htmlFile:
         html = BeautifulSoup(htmlFile, "html.parser")
         URLUltimoBoletim = scraper.url_ultimo_boletim(html)
         assert(URLUltimoBoletim ==
@@ -15,7 +15,7 @@ def test_30_03():
 
 
 def test_31_03():
-    with open("tests/html/noticias_31_03.html", "r", encoding="utf-8") as htmlFile:
+    with open("tests/deprecated/html/noticias_31_03.html", "r", encoding="utf-8") as htmlFile:
         html = BeautifulSoup(htmlFile, "html.parser")
         URLUltimoBoletim = scraper.url_ultimo_boletim(html)
         assert(URLUltimoBoletim ==
@@ -24,7 +24,7 @@ def test_31_03():
 
 def test_fail():
     with pytest.raises(TypeError):
-        with open("tests/html/noticias_31_03_fail.html", "r", encoding="utf-8") as htmlFile:
+        with open("tests/deprecated/html/noticias_31_03_fail.html", "r", encoding="utf-8") as htmlFile:
             html = BeautifulSoup(htmlFile, "html.parser")
             URLUltimoBoletim = scraper.url_ultimo_boletim(html)
             print(URLUltimoBoletim)

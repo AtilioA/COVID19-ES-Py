@@ -1,6 +1,3 @@
-import pytest
-from bs4 import BeautifulSoup
-
 from COVID19_ES_Py import ScraperBoletim
 
 scraper = ScraperBoletim()

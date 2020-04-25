@@ -90,7 +90,11 @@ MUNICIPIOS = [
 def trata_dados_linha(linha):
     """ Trata e corrige os valores das linhas dos arquivos csv de relatórios."""
 
-    linha[0] = arrow.get(linha[0], ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
+    try:
+        linha[0] = arrow.get(linha[0])
+    except arrow.ParserError:
+        linha[0] = arrow.get(linha[0], ["DD/MM/YYYY", "DD-MM-YYYY",
+                                        "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
 
     if linha[2] in ["Ignorado", "-"]:
         linha[2] = None

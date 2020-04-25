@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import arrow
 from COVID19_ES_Py.relatorio import LeitorRelatorio
@@ -80,28 +81,30 @@ def cria_planilha(path):
 
 # Cria tabela com relatório para um dia apenas
 def relatorio_para_tabela(path, data=None, caminhoCSV=None):
-    if caminhoCSV:
-        leitor = LeitorRelatorio(caminhoCSV)
-        relatorio = leitor.relatorio
-    else:
-        leitor = LeitorRelatorio()
-        relatorio = leitor.carrega_ultimo_relatorio()
-
     if data:
         relatorio.rows = leitor.filtra_casos_ate_dia(data)
         dataRelatorio = arrow.get(data, "DD/MM/YYYY").format("DD_MM")
     else:
         dataRelatorio = END.format("DD_MM")
+
+    if caminhoCSV:
+        print(f"Lendo arquivo {os.path.basename(caminhoCSV)}")
+        leitor = LeitorRelatorio(caminhoCSV)
+        relatorio = leitor.relatorio
+        arquivoCriado = Path(f"{path}/ES_{os.path.basename(caminhoCSV)[:5]}.csv")
+    else:
+        leitor = LeitorRelatorio()
+        relatorio = leitor.carrega_ultimo_relatorio()
+        arquivoCriado = Path(f"{path}/ES_{dataRelatorio}.csv")
+
     relatorio.popula_relatorio()
 
-    print(relatorio.nMunicipiosInfectados)
-
     totalGeral = relatorio.totalGeral
-    print(totalGeral)
+    print(f"Total geral: {totalGeral}")
 
-    with open(Path(f"{path}/ES_{dataRelatorio}.csv".format(path)), "w+", encoding="utf-8") as f:
+    with open(arquivoCriado, "w+", encoding="utf-8") as f:
         f.write(
-            f"municipio|confirmados_{dataRelatorio}|mortes_{dataRelatorio}\n")
+            f"municipio|confirmados|mortes\n")
         f.write(f"TOTAL NO ESTADO|{totalGeral['casosConfirmados']}|{totalGeral['obitos']}\n")
         f.write(
             f"Importados/Indefinidos|{relatorio.importadosOuIndefinidos['casosConfirmados']}|{relatorio.importadosOuIndefinidos['obitos']}\n")
@@ -109,8 +112,8 @@ def relatorio_para_tabela(path, data=None, caminhoCSV=None):
             casosConfirmados = objMunicipio.casosConfirmados if objMunicipio.casosConfirmados > 0 or municipio in MUNICIPIOS_MARCADOS else ""
             obitos = objMunicipio.obitos if objMunicipio.obitos > 0 or casosConfirmados != "" else ""
             f.write(f"{municipio}|{casosConfirmados}|{obitos}\n")
-        print("Relatório gerado.")
+        print(f"Tabela do relatório salva em {arquivoCriado}.")
 
 
 if __name__ == "__main__":
-    cria_planilha(".")
+    relatorio_para_tabela(".", caminhoCSV="24_04_2020.csv")

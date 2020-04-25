@@ -13,6 +13,7 @@ from .relatorio import (LeitorRelatorio, Relatorio)
 __all__ = [
     'ScraperBoletim',
     'Boletim',
+    'LeitorRelatorio',
     'Relatorio',
 ]
 

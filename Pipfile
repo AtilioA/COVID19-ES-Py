@@ -7,13 +7,14 @@ verify_ssl = true
 flake8 = "*"
 pytest = "*"
 autopep8 = "*"
+pipenv-setup = "*"
+pytest-cov = "*"
+coverage = "*"
 
 [packages]
 beautifulsoup4 = "*"
 requests = "*"
 arrow = "*"
-pytest-cov = "*"
-coverage = "*"
 rows = {file = "https://github.com/turicas/rows/archive/develop.zip"}
 deprecated = "*"
 

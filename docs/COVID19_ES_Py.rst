@@ -20,6 +20,14 @@ COVID19\_ES\_Py.exceptions module
    :undoc-members:
    :show-inheritance:
 
+COVID19\_ES\_Py.relatorio module
+--------------------------------
+
+.. automodule:: COVID19_ES_Py.relatorio
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 COVID19\_ES\_Py.utils module
 ----------------------------
 

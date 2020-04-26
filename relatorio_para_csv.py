@@ -108,12 +108,12 @@ def relatorio_para_tabela(path, data=None, caminhoCSV=None):
         f.write(f"TOTAL NO ESTADO|{totalGeral['casosConfirmados']}|{totalGeral['obitos']}\n")
         f.write(
             f"Importados/Indefinidos|{relatorio.importadosOuIndefinidos['casosConfirmados']}|{relatorio.importadosOuIndefinidos['obitos']}\n")
-        for municipio, objMunicipio in sorted(relatorio.casosMunicipios.items()):
+        for i, (municipio, objMunicipio) in enumerate(sorted(relatorio.casosMunicipios.items())):
             casosConfirmados = objMunicipio.casosConfirmados if objMunicipio.casosConfirmados > 0 or municipio in MUNICIPIOS_MARCADOS else ""
             obitos = objMunicipio.obitos if objMunicipio.obitos > 0 or casosConfirmados != "" else ""
-            f.write(f"{municipio}|{casosConfirmados}|{obitos}\n")
+            f.write(f"{MUNICIPIOS_SEM_TRATAMENTO[i]}|{casosConfirmados}|{obitos}\n")
         print(f"Tabela do relatório salva em {arquivoCriado}.")
 
 
 if __name__ == "__main__":
-    relatorio_para_tabela(".", caminhoCSV="24_04_2020.csv")
+    relatorio_para_tabela(".", caminhoCSV="25_04_2020.csv")

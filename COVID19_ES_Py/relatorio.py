@@ -361,9 +361,14 @@ class LeitorRelatorio():
             dataArrow = arrow.get(
                 data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
             )
-            self.relatorio.linhasRelatorio = [
-                caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0], ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
-            ]
+            try:
+                self.relatorio.linhasRelatorio = [
+                    caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0], ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY", "YYYY-MM-DD"])
+                ]
+            except TypeError:
+                self.relatorio.linhasRelatorio = [
+                    caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0])
+                ]
             return self.relatorio.popula_relatorio()
         else:
             raise RelatorioError(
@@ -401,4 +406,4 @@ class LeitorRelatorio():
         if self.csv:
             return f"Leitor de relatórios carregado com {self.csv}."
         else:
-            return f"Leitor de relatórios sem dados para ler."
+            return "Leitor de relatórios sem dados para ler."

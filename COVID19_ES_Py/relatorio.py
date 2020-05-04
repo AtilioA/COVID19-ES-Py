@@ -48,16 +48,16 @@ class Municipio():
         self.obitos = 0
 
     # Objetos do tipo Municipio podem ser comparados alfabeticamente
-    def __eq__(self, other):
+    def __eq__(self, other):  # pragma: no cover
         return (self.nome.lower() == other.nome.lower())
 
-    def __lt__(self, other):
+    def __lt__(self, other):  # pragma: no cover
         return (self.nome.lower() < other.nome.lower())
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return f"Município {self.nome}:\n{self.casosConfirmados} casos confirmados.\n{self.obitos} óbitos."
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"{{'casosConfirmados': {self.casosConfirmados}, 'obitos': {self.obitos}}}"
 
 
@@ -144,8 +144,8 @@ class Caso():
             self.viagemBrasil = viagemBrasil
             self.viagemInternacional = viagemInternacional
 
-    def __str__(self):
-        return f"Caso de {self.data} - {self.classificacao} em {self.municipio}"
+    def __str__(self):  # pragma: no cover
+        return f"Caso de {self.data} - {self.classificacao} em {self.municipio}"  # pragma: no cover
 
     def carrega_dados_linha(self, linha):
         """Carrega os dados presentes em uma linha do csv para o objeto Caso.
@@ -402,7 +402,7 @@ class LeitorRelatorio():
             raise RelatorioError(
                 "Não é possível filtrar pois o relatório está vazio (use o método popula_relatorio() para preencher o relatório).")
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         if self.csv:
             return f"Leitor de relatórios carregado com {self.csv}."
         else:

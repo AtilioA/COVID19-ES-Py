@@ -46,16 +46,6 @@
 
 <hr>
 
-- Descontinuado/deprecated a partir da versão `2.0.0`:
-
-  - Pesquisa de casos por município
-  - Pesquisa de boletim por data
-  - Filtro de municípios com casos confirmados
-  - Extração de URLs de boletins emitidos pela Secretaria de Estado da Saúde (SESA)
-  - Extração de título, datas, corpo de notícia, números de casos e óbitos, etc, dos boletins
-
-  Uma vez que a partir de 14/04 a SESA não emitirá mais boletins e em vez disso divulgará dados ao longo do dia pelo painel PowerBI, os recursos acima implementados através das classes `ScraperBoletim` e `Boletim` estão descontinuados. O pacote por padrão irá utilizar dados dos relatórios gerados pelo PowerBI, através das classes `LeitorRelatório` e `Relatório` (ver seção <a href="#como-usar">Como usar</a>). Não use recursos descontinuados a menos que tenha um motivo específico.
-
 # Instalação
 
 Atualmente, o COVID19-ES-Py possui suporte para Python 3.6+. Uma mesma release é feita ao PyPI e ao GitHub ao mesmo tempo, portanto você pode usar a fonte que achar mais conveniente.
@@ -159,7 +149,7 @@ Retorna objetos `Relatorio`:
 Filtrando até um dado dia:
 
 ```python
-relatorio29_03 = leitor.filtra_casos_ate_dia("16/04/2020")
+relatorio16_04 = leitor.filtra_casos_ate_dia("16/04/2020")
 >>> "Relatório do arquivo https://bi.static.es.gov.br/covid19/MICRODADOS.csv:
 Total geral: {'casosConfirmados': 935, 'obitos': 28}
 35 municípios infectados."
@@ -168,91 +158,13 @@ Total geral: {'casosConfirmados': 935, 'obitos': 28}
 Filtrando apenas um dado dia:
 
 ```python
-relatorio29_03 = leitor.filtra_casos_no_dia("16/04/2020")
+relatorio16_04 = leitor.filtra_casos_no_dia("16/04/2020")
 >>> "Relatório do arquivo https://bi.static.es.gov.br/covid19/MICRODADOS.csv:
 Total geral: {'casosConfirmados': 11, 'obitos': 0}
 5 municípios infectados."
 ```
 
 A data de entrada [pode ser formatada de várias formas](https://covid19-es-py.readthedocs.io/pt_BR/latest/COVID19_ES_Py.html#COVID19_ES_Py.relatorio.LeitorRelatorio.filtra_casos_ate_dia).
-
-#### Exemplos descontinuados
-
-Exemplos de recursos descontinuados e que serão removidos na versão `3.0.0`.:
-
-Inicializando o scraper e obtendo dados do último boletim:
-
-```python
-import COVID19_ES_Py
-
-# Inicializando o scraper
-scraper = COVID19_ES_Py.ScraperBoletim()
-
-# Carregando objeto Boletim com último boletim emitido
-boletim = scraper.carrega_ultimo_boletim()  # Boletim do dia 27/03/2020
-boletim.casos
->>> {'Afonso Cláudio': {'casosConfirmados': '0', 'casosDescartados': '1', 'casosSuspeitos': '0', 'totalCasos': '1'},
-...
-'Vitória': {'casosConfirmados': '18', 'casosDescartados': '96', 'casosSuspeitos': '142', 'totalCasos': '256'}}
-```
-
-Total de casos do boletim:
-
-```python
-boletim.totalGeral
->>> {'casosConfirmados': '53 + 1*', 'casosDescartados': '411', 'casosSuspeitos': '1.105', 'totalCasos': '1.570'}
-```
-
-Pesquisando casos por município:
-
-Retorna dicionário de casos do município no boletim:
-
-```python
-boletim.pesquisa_casos_municipio("Vitória")
->>> {'casosConfirmados': '18', 'casosDescartados': '96', 'casosSuspeitos': '142', 'totalCasos': '256'}
-
-# A busca ignora espaços extras e capitalização
-boletim.pesquisa_casos_municipio("  santa teresa ")
->>> {'casosConfirmados': '1', 'casosDescartados': '1', 'casosSuspeitos': '0', 'totalCasos': '2'}
-
-# Também ignora caracteres especiais
-boletim.pesquisa_casos_municipio("AFONSO CLAUDIO")
->>> {'casosConfirmados': '0', 'casosDescartados': '1', 'casosSuspeitos': '0', 'totalCasos': '1'}
-
-boletim.pesquisa_casos_municipio("arapiraca")
->>> exceptions.BoletimError: O município "arapiraca" não foi encontrado no boletim. Pode ter ocorrido um erro de digitação ou o município não registrou casos de COVID-19.
-```
-
-Pesquisando boletim por data:
-
-Retorna o boletim da data de entrada, se houver:
-
-```python
-boletim29_03 = scraper.pesquisa_boletim_data("29/03/2020")
-boletim29_03.pega_dataPublicacao_formatada()
->>> "29/03/2020 19h25"
-```
-
-A data de entrada [pode ser formatada de várias formas](https://covid19-es-py.readthedocs.io/pt_BR/latest/COVID19_ES_Py.html#COVID19_ES_Py.boletim.ScraperBoletim.pesquisa_boletim_data).
-
-Filtrando municípios com casos confirmados:
-
-Retorna dicionário de dicionários com municípios com casos confirmados:
-
-```python
-boletim05_04 = scraper.pesquisa_boletim_data("05/04/2020")
-
-municipiosFiltrados = boletim05_04.filtra_municipios_com_casos_confirmados()
-municipiosFiltrados
->>> {'Afonso Cláudio': {"casosConfirmados": '1', "casosDescartados": "3", "casosSuspeitos": "3", "totalCasos": "7", "obitos": "0"},
-...
-'Vitória': {'casosConfirmados': '62', 'casosDescartados': '252', 'casosSuspeitos': '58', 'totalCasos': '372', 'obitos': '2'}}
-
-boletim05_04.nMunicipiosInfectados
->>> 18
-len(municipiosFiltrados)
->>> 18
-```
 
 ## Considerações finais
 

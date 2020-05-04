@@ -4,14 +4,6 @@ COVID19\_ES\_Py package
 Submodules
 ----------
 
-COVID19\_ES\_Py.boletim module
-------------------------------
-
-.. automodule:: COVID19_ES_Py.boletim
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 COVID19\_ES\_Py.exceptions module
 ---------------------------------
 

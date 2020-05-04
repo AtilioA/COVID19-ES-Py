@@ -7,7 +7,7 @@ with open(path.join(thisDirectory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="COVID19-ES-Py",
-    version="2.0.0",
+    version="3.0.0",
     description="Scraper de boletins de casos de COVID-19 no Espírito Santo.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -34,7 +34,6 @@ setup(
         "chardet==3.0.4",
         "colorama==0.4.3; sys_platform == 'win32'",
         "coverage==5.1",
-        "deprecated==1.2.9",
         "idna==2.9",
         "importlib-metadata==1.6.0; python_version < '3.8'",
         "more-itertools==8.2.0",

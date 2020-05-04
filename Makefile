@@ -5,9 +5,6 @@ build: clean
 pytest:
 	pytest --cov=./ --disable-pytest-warnings
 
-update_docs:
-	sphinx-apidoc -o . ..\COVID19_ES_Py --force
-
 test:
 	twine check dist/*
 

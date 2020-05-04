@@ -16,7 +16,6 @@ beautifulsoup4 = "*"
 requests = "*"
 arrow = "*"
 rows = {file = "https://github.com/turicas/rows/archive/develop.zip"}
-deprecated = "*"
 
 [requires]
 python_version = "3.7"

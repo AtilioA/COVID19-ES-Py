@@ -1,4 +1,4 @@
-"""O módulo `relatorio.py` é o principal do pacote a partir de 14/04/2020 (`COVID19-ES-Py 2.0.0`).
+"""O módulo `relatorio.py` é o principal do pacote a partir de 15/04/2020 (`COVID19-ES-Py 3.0.0`).
 Nele são introduzidas as classes e métodos utilizados para coletar dados dos relatórios emitidos pelo Governo através do painel PowerBI.
 
 """
@@ -48,16 +48,16 @@ class Municipio():
         self.obitos = 0
 
     # Objetos do tipo Municipio podem ser comparados alfabeticamente
-    def __eq__(self, other):
+    def __eq__(self, other):  # pragma: no cover
         return (self.nome.lower() == other.nome.lower())
 
-    def __lt__(self, other):
+    def __lt__(self, other):  # pragma: no cover
         return (self.nome.lower() < other.nome.lower())
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return f"Município {self.nome}:\n{self.casosConfirmados} casos confirmados.\n{self.obitos} óbitos."
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"{{'casosConfirmados': {self.casosConfirmados}, 'obitos': {self.obitos}}}"
 
 
@@ -144,8 +144,8 @@ class Caso():
             self.viagemBrasil = viagemBrasil
             self.viagemInternacional = viagemInternacional
 
-    def __str__(self):
-        return f"Caso de {self.data} - {self.classificacao} em {self.municipio}"
+    def __str__(self):  # pragma: no cover
+        return f"Caso de {self.data} - {self.classificacao} em {self.municipio}"  # pragma: no cover
 
     def carrega_dados_linha(self, linha):
         """Carrega os dados presentes em uma linha do csv para o objeto Caso.
@@ -217,7 +217,7 @@ class Relatorio():
     def __init__(self, caminhoCSV=None):
         if caminhoCSV:
             self.csv = Path(caminhoCSV)
-            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding='ANSI')
+            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding='Latin-1')
         else:
             self.csv = URL_RELATORIO_CSV
             self.linhasRelatorio = None
@@ -324,7 +324,7 @@ class LeitorRelatorio():
         self.relatorio = Relatorio()
         if caminhoCSV:
             self.csv = Path(caminhoCSV)
-            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding='ANSI')
+            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding='Latin-1')
             self.relatorio.csv = self.csv
             self.relatorio.linhasRelatorio = self.linhasRelatorio
             self.relatorio.popula_relatorio()
@@ -336,7 +336,7 @@ class LeitorRelatorio():
 
         self.relatorio.csv = URL_RELATORIO_CSV
         self.linhasRelatorio = rows.import_from_csv(
-            BytesIO(requests.get(self.relatorio.csv).content), encoding='ANSI')
+            BytesIO(requests.get(self.relatorio.csv).content), encoding='Latin-1')
         self.relatorio.linhasRelatorio = self.linhasRelatorio
 
         return self.relatorio.popula_relatorio()
@@ -347,7 +347,7 @@ class LeitorRelatorio():
         Parameters
         ----------
         data : ``str``
-            A data de publicação do boletim a ser pesquisado.
+            A data limite (incluso) a ser usada como filtro.
             Formatos de data aceitos:
             "DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY".
 
@@ -361,9 +361,14 @@ class LeitorRelatorio():
             dataArrow = arrow.get(
                 data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
             )
-            self.relatorio.linhasRelatorio = [
-                caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0], ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
-            ]
+            try:
+                self.relatorio.linhasRelatorio = [
+                    caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0], ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY", "YYYY-MM-DD"])
+                ]
+            except TypeError:
+                self.relatorio.linhasRelatorio = [
+                    caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0])
+                ]
             return self.relatorio.popula_relatorio()
         else:
             raise RelatorioError(
@@ -375,7 +380,7 @@ class LeitorRelatorio():
         Parameters
         ----------
         data : ``str``
-            A data de publicação do boletim a ser pesquisado.
+            A data específica a ser pesquisada.
             Formatos de data aceitos:
             "DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY".
 
@@ -397,8 +402,8 @@ class LeitorRelatorio():
             raise RelatorioError(
                 "Não é possível filtrar pois o relatório está vazio (use o método popula_relatorio() para preencher o relatório).")
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         if self.csv:
             return f"Leitor de relatórios carregado com {self.csv}."
         else:
-            return f"Leitor de relatórios sem dados para ler."
+            return "Leitor de relatórios sem dados para ler."

@@ -26,66 +26,15 @@ START = arrow.get("2020-03-01")  # Início da planilha
 END = arrow.now('America/Sao_Paulo')
 
 
-# Cria toda a planilha com o último relatório disponível
-def cria_planilha(path):
-    dataRelatorio = END.format("DD_MM")
-    # Intervalo de datas da planilha
-    intervaloDatas = list(reversed(list(arrow.Arrow.span_range("day", START, END))))
-
-    leitor = LeitorRelatorio()
-    relatorio = leitor.carrega_ultimo_relatorio()
-    relatorios = []  # Guarda relatórios de todas as datas
-    for r in intervaloDatas:
-        relatorio = leitor.filtra_casos_ate_dia(r[0].format("DD/MM/YYYY"))
-        relatorios.append(relatorio)
-
-    with open(Path(f"{path}/planilha_ES_{dataRelatorio}.csv".format(path)), "w+", encoding="utf-8") as f:
-        # Preenche cabeçalho
-        f.write("municipio|")
-        for r in intervaloDatas:
-
-            f.write(f"confirmados_{r[0].format('DD_MM')}|mortes_{r[0].format('DD_MM')}|")
-        f.write("\n")
-
-        # Preenche TOTAL NO ESTADO
-        f.write(f"TOTAL NO ESTADO|")
-        for i, r in enumerate(intervaloDatas):
-            relatorio = relatorios[i]
-            totalGeral = relatorio.totalGeral
-            f.write(f"{totalGeral['casosConfirmados']}|{totalGeral['obitos']}|")
-        f.write("\n")
-
-        # Preenche IMPORTADOS/INDEFINIDOS
-        f.write(f"Importados/Indefinidos|")
-        for i, r in enumerate(intervaloDatas):
-            relatorio = relatorios[i]
-            totalGeral = relatorio.totalGeral
-            f.write(
-                f"{relatorio.importadosOuIndefinidos['casosConfirmados']}|{relatorio.importadosOuIndefinidos['obitos']}|")
-        f.write("\n")
-
-        # Preenche valores de municípios
-        for municipio in MUNICIPIOS_SEM_TRATAMENTO:
-            f.write(f"{municipio}|")
-            for i, r in enumerate(intervaloDatas):
-                relatorio = relatorios[i]
-                objMunicipio = relatorio.busca_casos_municipio(municipio)
-
-                casosConfirmados = objMunicipio.casosConfirmados if objMunicipio.casosConfirmados > 0 else ""
-                obitos = objMunicipio.obitos if objMunicipio.obitos > 0 or casosConfirmados != "" else ""
-
-                f.write(
-                    f"{casosConfirmados}|{obitos}|")
-            f.write("\n")
-
-
 # Cria tabela com relatório para um dia apenas
 def relatorio_para_tabela(path, data=None, caminhoCSV=None):
-    if data:
-        relatorio.rows = leitor.filtra_casos_ate_dia(data)
+    if data and caminhoCSV:
+        leitor = LeitorRelatorio(caminhoCSV)
+        relatorio = leitor.filtra_casos_ate_dia(data)
         dataRelatorio = arrow.get(data, "DD/MM/YYYY").format("DD_MM")
-    else:
+    elif data:
         dataRelatorio = END.format("DD_MM")
+        relatorio = leitor.filtra_casos_ate_dia(dataRelatorio)
 
     if caminhoCSV:
         print(f"Lendo arquivo {os.path.basename(caminhoCSV)}")
@@ -100,6 +49,7 @@ def relatorio_para_tabela(path, data=None, caminhoCSV=None):
     relatorio.popula_relatorio()
 
     totalGeral = relatorio.totalGeral
+    print(f"Municípios infectados: {relatorio.nMunicipiosInfectados}")
     print(f"Total geral: {totalGeral}")
 
     with open(arquivoCriado, "w+", encoding="utf-8") as f:
@@ -109,11 +59,11 @@ def relatorio_para_tabela(path, data=None, caminhoCSV=None):
         f.write(
             f"Importados/Indefinidos|{relatorio.importadosOuIndefinidos['casosConfirmados']}|{relatorio.importadosOuIndefinidos['obitos']}\n")
         for i, (municipio, objMunicipio) in enumerate(sorted(relatorio.casosMunicipios.items())):
-            casosConfirmados = objMunicipio.casosConfirmados if objMunicipio.casosConfirmados > 0 or municipio in MUNICIPIOS_MARCADOS else ""
-            obitos = objMunicipio.obitos if objMunicipio.obitos > 0 or casosConfirmados != "" else ""
+            casosConfirmados = objMunicipio.casosConfirmados
+            obitos = objMunicipio.obitos
             f.write(f"{MUNICIPIOS_SEM_TRATAMENTO[i]}|{casosConfirmados}|{obitos}\n")
         print(f"Tabela do relatório salva em {arquivoCriado}.")
 
 
 if __name__ == "__main__":
-    relatorio_para_tabela(".", caminhoCSV="25_04_2020.csv")
+    relatorio_para_tabela(".", caminhoCSV=f"{END.format('DD-MM-YYYY')}.csv")

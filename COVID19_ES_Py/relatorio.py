@@ -1,4 +1,4 @@
-"""O módulo `relatorio.py` é o principal do pacote a partir de 15/04/2020 (`COVID19-ES-Py 2.0.0`).
+"""O módulo `relatorio.py` é o principal do pacote a partir de 15/04/2020 (`COVID19-ES-Py 3.0.0`).
 Nele são introduzidas as classes e métodos utilizados para coletar dados dos relatórios emitidos pelo Governo através do painel PowerBI.
 
 """

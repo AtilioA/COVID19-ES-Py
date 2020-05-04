@@ -34,7 +34,6 @@ setup(
         "chardet==3.0.4",
         "colorama==0.4.3; sys_platform == 'win32'",
         "coverage==5.1",
-        "deprecated==1.2.9",
         "idna==2.9",
         "importlib-metadata==1.6.0; python_version < '3.8'",
         "more-itertools==8.2.0",

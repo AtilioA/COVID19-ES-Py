@@ -217,7 +217,7 @@ class Relatorio():
     def __init__(self, caminhoCSV=None):
         if caminhoCSV:
             self.csv = Path(caminhoCSV)
-            self.linhasRelatorio = rows.import_from_csv(self.csv)
+            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding='ANSI')
         else:
             self.csv = URL_RELATORIO_CSV
             self.linhasRelatorio = None
@@ -324,7 +324,7 @@ class LeitorRelatorio():
         self.relatorio = Relatorio()
         if caminhoCSV:
             self.csv = Path(caminhoCSV)
-            self.linhasRelatorio = rows.import_from_csv(self.csv)
+            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding='ANSI')
             self.relatorio.csv = self.csv
             self.relatorio.linhasRelatorio = self.linhasRelatorio
             self.relatorio.popula_relatorio()
@@ -336,7 +336,7 @@ class LeitorRelatorio():
 
         self.relatorio.csv = URL_RELATORIO_CSV
         self.linhasRelatorio = rows.import_from_csv(
-            BytesIO(requests.get(self.relatorio.csv).content))
+            BytesIO(requests.get(self.relatorio.csv).content), encoding='ANSI')
         self.relatorio.linhasRelatorio = self.linhasRelatorio
 
         return self.relatorio.popula_relatorio()

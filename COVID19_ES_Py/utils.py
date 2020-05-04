@@ -121,16 +121,6 @@ def trata_dados_linha(linha):
     return linha
 
 
-def trata_dados_tabela(linha):
-    """ Substitui caracteres vazios de uma lista por zeros.
-    Utilizada para tratar valores das colunas das tabelas dos boletins."""
-
-    patternEntradasInvalidas = re.compile(r"\xa0|&nbsp;|^\s*$|\s*-\s*")
-    linha = map(lambda coluna: re.sub(
-        patternEntradasInvalidas, "0", coluna), linha)
-    return list(linha)
-
-
 def remove_caracteres_especiais(stringEntrada):
     """Remove caracteres especiais (acentos, etc) de uma string."""
 

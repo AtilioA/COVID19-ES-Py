@@ -7,12 +7,9 @@ Veja https://github.com/AtilioA/COVID19-ES-Py ou https://covid19-es-py.readthedo
 """
 
 # flake8: noqa
-from .boletim import (ScraperBoletim, Boletim)  # Descontinuado
 from .relatorio import (LeitorRelatorio, Relatorio)
 
 __all__ = [
-    'ScraperBoletim',
-    'Boletim',
     'LeitorRelatorio',
     'Relatorio',
 ]

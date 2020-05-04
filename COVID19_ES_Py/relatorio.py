@@ -1,4 +1,4 @@
-"""O módulo `relatorio.py` é o principal do pacote a partir de 14/04/2020 (`COVID19-ES-Py 2.0.0`).
+"""O módulo `relatorio.py` é o principal do pacote a partir de 15/04/2020 (`COVID19-ES-Py 2.0.0`).
 Nele são introduzidas as classes e métodos utilizados para coletar dados dos relatórios emitidos pelo Governo através do painel PowerBI.
 
 """
@@ -347,7 +347,7 @@ class LeitorRelatorio():
         Parameters
         ----------
         data : ``str``
-            A data de publicação do boletim a ser pesquisado.
+            A data limite (incluso) a ser usada como filtro.
             Formatos de data aceitos:
             "DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY".
 
@@ -375,7 +375,7 @@ class LeitorRelatorio():
         Parameters
         ----------
         data : ``str``
-            A data de publicação do boletim a ser pesquisado.
+            A data específica a ser pesquisada.
             Formatos de data aceitos:
             "DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY".
 

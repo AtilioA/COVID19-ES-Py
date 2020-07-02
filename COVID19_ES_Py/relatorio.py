@@ -74,6 +74,20 @@ class Caso():
     ----------
     data : Objeto `arrow`
         A data de registro do caso.
+    dataNotificacao : Objeto `arrow`
+        A data de notificação do caso.
+    dataCadastro : Objeto `arrow`
+        A data de cadastro do caso.
+    dataDiagnostico : Objeto `arrow`
+        A data de diagnóstico do caso.
+    dataColeta_RT_PCR : Objeto `arrow`
+        A data de coleta do teste RT-PCR referente ao caso.
+    dataColetaTesteRapido : Objeto `arrow`
+        A data de coleta do teste rápido referente ao caso.
+    dataEncerramento : Objeto `arrow`
+        A data de encerramento do caso.
+    dataObito : Objeto `arrow`
+        A data de óbito do paciente.
     classificacao : ``str``
         A classificação da ocorrência de COVID-19 no paciente.
     evolucao : ``str`` ou ``None``
@@ -104,6 +118,8 @@ class Caso():
         Se o paciente realizou viagem nacional ou não.
     viagemInternacional : ``bool`` ou ``None``
         Se o paciente realizou viagem internacional ou não.
+    profissionalSaude: ``bool`` ou ``None``
+        Se o paciente é profissional da saúde ou não.
     """
 
     def __init__(self,
@@ -154,37 +170,44 @@ class Caso():
 
         linha = trata_dados_linha(list(linha))
 
-        self.data = linha[0]
-        self.classificacao = linha[1]
-        self.evolucao = linha[2]
-        self.criterioConfirmacao = linha[3]
-        self.statusNotificacao = linha[4]
-        self.municipio = linha[5]
-        self.bairro = linha[6]
-        self.faixaEtaria = linha[7]
-        self.sexo = linha[8]
-        self.racaCor = linha[9]
-        self.escolaridade = linha[10]
+        self.dataNotificacao = linha[0]
+        self.dataCadastro = linha[1]
+        self.dataDiagnostico = linha[2]
+        self.dataColeta_RT_PCR = linha[3]
+        self.dataColetaTesteRapido = linha[4]
+        self.dataEncerramento = linha[5]
+        self.dataObito = linha[6]
+        self.classificacao = linha[7]
+        self.evolucao = linha[8]
+        self.criterioConfirmacao = linha[9]
+        self.statusNotificacao = linha[10]
+        self.municipio = linha[11]
+        self.bairro = linha[12]
+        self.faixaEtaria = linha[13]
+        self.sexo = linha[14]
+        self.racaCor = linha[15]
+        self.escolaridade = linha[16]
         self.sintomas = {
-            "febre": linha[11],
-            "dificuldadeRespiratoria": linha[12],
-            "tosse": linha[13],
-            "coriza": linha[14],
-            "dorGarganta": linha[15],
-            "diarreia": linha[16],
-            "cefaleia": linha[17],
+            "febre": linha[17],
+            "dificuldadeRespiratoria": linha[18],
+            "tosse": linha[19],
+            "coriza": linha[20],
+            "dorGarganta": linha[21],
+            "diarreia": linha[22],
+            "cefaleia": linha[23],
         }
         self.comorbidades = {
-            "comorbidadePulmao": linha[18],
-            "comorbidadeCardio": linha[19],
-            "comorbidadeRenal": linha[20],
-            "comorbidadeDiabetes": linha[21],
-            "comorbidadeTabagismo": linha[22],
-            "comorbidadeObesidade": linha[23]
+            "comorbidadePulmao": linha[24],
+            "comorbidadeCardio": linha[25],
+            "comorbidadeRenal": linha[26],
+            "comorbidadeDiabetes": linha[27],
+            "comorbidadeTabagismo": linha[28],
+            "comorbidadeObesidade": linha[29]
         }
-        self.ficouInternado = linha[24]
-        self.viagemBrasil = linha[25]
-        self.viagemInternacional = linha[26]
+        self.ficouInternado = linha[30]
+        self.viagemBrasil = linha[31]
+        self.viagemInternacional = linha[32]
+        self.profissionalSaude = linha[33]
 
         return self
 
@@ -297,7 +320,7 @@ class Relatorio():
         return copy.copy(self)
 
     def __str__(self):
-        return f"Relatório do arquivo {self.csv}:\nTotal geral: {self.totalGeral}\n{self.nMunicipiosInfectados} municípios infectados."
+        return f"Relatório do arquivo {self.csv}:\nTotal geral: {self.totalGeral}\n{self.nMunicipiosInfectados} municípios com casos confirmados."
 
 
 class LeitorRelatorio():

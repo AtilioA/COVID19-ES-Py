@@ -90,33 +90,36 @@ MUNICIPIOS = [
 def trata_dados_linha(linha):
     """ Trata e corrige os valores das linhas dos arquivos csv de relatórios."""
 
-    try:
-        linha[0] = arrow.get(linha[0])
-    except arrow.ParserError:
-        linha[0] = arrow.get(linha[0], ["DD/MM/YYYY", "DD-MM-YYYY",
-                                        "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
+    for i in range(0, 6):
+        try:
+            linha[i] = arrow.get(linha[i])
+        except arrow.ParserError:
+            linha[i] = arrow.get(linha[i], ["DD/MM/YYYY", "DD-MM-YYYY",
+                                            "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
 
-    if linha[2] in ["Ignorado", "-"]:
-        linha[2] = None
-    if "-" in linha[3]:
-        linha[3] = None
-    if linha[6] in ["Não encontrado", "NULL"]:
-        linha[6] = None
-    if "Ignorado" in linha[9]:
+    if linha[8] in ["Ignorado", "-"]:
+        linha[8] = None
+    if "-" in linha[9]:
         linha[9] = None
-    if "Ignorado" in linha[10]:
-        linha[10] = None
+    if "Encontrado" in linha[12]: # "Não Encontrado"
+        linha[12] = None
+    if "Ignorado" in linha[15]:
+        linha[15] = None
+    if "Ignorado" in linha[16]:
+        linha[16] = None
 
     stringParaBool = {
         "Sim": True,
         "Não": False,
+        "Ignorado": None,
+        "Não Informado"
         "-": None,
         "": None,
         1: True,
         2: None,
     }
-    for i, campo in enumerate(linha[11:]):
-        linha[i + 11] = stringParaBool.get(linha[i + 11], None)
+    for i, campo in enumerate(linha[17:]):
+        linha[i + 17] = stringParaBool.get(linha[i + 17], None)
 
     return linha
 

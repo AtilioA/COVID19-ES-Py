@@ -305,7 +305,7 @@ class Relatorio():
             if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
                 if self.casosMunicipios[caso.municipio].casosConfirmados == 0:
                     self.nMunicipiosInfectados += 1
-                if (caso.evolucao == "Óbito pelo COVID-19"):
+                if (caso.evolucao == "ï¿½bito pelo COVID-19"):
                     self.totalGeral['obitos'] += 1
                     self.casosMunicipios[caso.municipio].obitos += 1
                 self.casosMunicipios[caso.municipio].casos.append(caso)

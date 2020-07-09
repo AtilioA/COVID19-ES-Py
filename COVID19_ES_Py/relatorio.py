@@ -302,21 +302,22 @@ class Relatorio():
 
         for linha in self.linhasRelatorio:
             caso = Caso(linha)
-            if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
-                if self.casosMunicipios[caso.municipio].casosConfirmados == 0:
-                    self.nMunicipiosInfectados += 1
-                if (caso.evolucao == "Óbito pelo COVID-19"):
-                    self.totalGeral['obitos'] += 1
-                    self.casosMunicipios[caso.municipio].obitos += 1
-                self.casosMunicipios[caso.municipio].casos.append(caso)
-                self.casosMunicipios[caso.municipio].casosConfirmados += 1
-            else:
-                self.importadosOuIndefinidos['casosConfirmados'] += 1
-                if (caso.evolucao == "Óbito pelo COVID-19"):
-                    self.totalGeral['obitos'] += 1
-                    self.importadosOuIndefinidos['obitos'] += 1
+            if caso.classificacao == "Confirmados":
+                if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
+                    if self.casosMunicipios[caso.municipio].casosConfirmados == 0:
+                        self.nMunicipiosInfectados += 1
+                    if (caso.evolucao == "Óbito pelo COVID-19"):
+                        self.totalGeral['obitos'] += 1
+                        self.casosMunicipios[caso.municipio].obitos += 1
+                    self.casosMunicipios[caso.municipio].casos.append(caso)
+                    self.casosMunicipios[caso.municipio].casosConfirmados += 1
+                else:
+                    self.importadosOuIndefinidos['casosConfirmados'] += 1
+                    if (caso.evolucao == "Óbito pelo COVID-19"):
+                        self.totalGeral['obitos'] += 1
+                        self.importadosOuIndefinidos['obitos'] += 1
 
-            self.totalGeral['casosConfirmados'] += 1
+                self.totalGeral['casosConfirmados'] += 1
         return copy.copy(self)
 
     def __str__(self):

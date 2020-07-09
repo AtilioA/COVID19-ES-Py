@@ -3,8 +3,6 @@ from pathlib import Path
 import arrow
 from COVID19_ES_Py.relatorio import LeitorRelatorio
 
-# Municípios que tiveram casos removidos (?)
-MUNICIPIOS_MARCADOS = ["ALTO RIO NOVO", "VILA VALERIO"]
 MUNICIPIOS_SEM_TRATAMENTO = [
     'Afonso Cláudio', 'Água Doce do Norte', 'Águia Branca', 'Alegre', 'Alfredo Chaves',
     'Alto Rio Novo', 'Anchieta', 'Apiacá', 'Aracruz', 'Atilio Vivacqua', 'Baixo Guandu',

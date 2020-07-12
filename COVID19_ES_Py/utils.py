@@ -126,21 +126,16 @@ def trata_dados_linha(linha):
 
     for i in range(0, 6):
         try:
-            linha[i] = arrow.get(linha[i])
+            linha[i] = arrow.get(linha[i], ["YYYY/MM/DD", "YYYY-MM-DD",
+                                            "YYYY_MM_DD", "YYYY.MM.DD", "YYYYMMDD"])
         except arrow.ParserError:
-            linha[i] = arrow.get(linha[i], ["DD/MM/YYYY", "DD-MM-YYYY",
-                                            "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
+            pass
 
-    if linha[8] in ["Ignorado", "-"]:
-        linha[8] = None
-    if "-" in linha[9]:
-        linha[9] = None
-    if "Encontrado" in linha[12]:  # "Não Encontrado"
+    for i in range(5, 17):
+        if linha[i] in ["Ignorado", "-"]:
+            linha[i] = None
+    if "Não Encontrado" in linha[12]:
         linha[12] = None
-    if "Ignorado" in linha[15]:
-        linha[15] = None
-    if "Ignorado" in linha[16]:
-        linha[16] = None
 
     stringParaBool = {
         "Sim": True,
@@ -152,8 +147,8 @@ def trata_dados_linha(linha):
         1: True,
         2: None,
     }
-    for i, campo in enumerate(linha[17:]):
-        linha[i + 17] = stringParaBool.get(linha[i + 17], None)
+    for i, campo in enumerate(linha[15:]):
+        linha[i + 15] = stringParaBool.get(linha[i + 15], None)
 
     return linha
 

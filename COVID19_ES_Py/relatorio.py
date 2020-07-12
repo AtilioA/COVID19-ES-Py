@@ -198,8 +198,6 @@ class Caso():
 
     Attributes
     ----------
-    data : Objeto `arrow`
-        A data de registro do caso.
     dataNotificacao : Objeto `arrow`
         A data de notificação do caso.
     dataCadastro : Objeto `arrow`
@@ -250,7 +248,13 @@ class Caso():
 
     def __init__(self,
                  dados=None,
-                 data=None,
+                 dataNotificacao=None,
+                 dataCadastro=None,
+                 dataDiagnostico=None,
+                 dataColeta_RT_PCR=None,
+                 dataColetaTesteRapido=None,
+                 dataEncerramento=None,
+                 dataObito=None,
                  classificacao=None,
                  evolucao=None,
                  criterioConfirmacao=None,
@@ -265,11 +269,18 @@ class Caso():
                  comorbidades=None,
                  ficouInternado=None,
                  viagemBrasil=None,
-                 viagemInternacional=None):
+                 viagemInternacional=None,
+                 profissionalSaude=None):
         if dados:
             self.carrega_dados_linha(dados)
         else:
-            self.data = data
+            self.dataNotificacao = dataNotificacao
+            self.dataCadastro = dataCadastro
+            self.dataDiagnostico = dataDiagnostico
+            self.dataColeta_RT_PCR = dataColeta_RT_PCR
+            self.dataColetaTesteRapido = dataColetaTesteRapido
+            self.dataEncerramento = dataEncerramento
+            self.dataObito = dataObito
             self.classificacao = classificacao
             self.evolucao = evolucao
             self.criterioConfirmacao = criterioConfirmacao
@@ -287,7 +298,7 @@ class Caso():
             self.viagemInternacional = viagemInternacional
 
     def __str__(self):  # pragma: no cover
-        return f"Caso de {self.data} - {self.classificacao} em {self.municipio}"  # pragma: no cover
+        return f"Caso de {self.dataNotificacao} - {self.classificacao} em {self.municipio}"  # pragma: no cover
 
     def carrega_dados_linha(self, linha):
         """Carrega os dados presentes em uma linha do csv para o objeto Caso.
@@ -296,44 +307,51 @@ class Caso():
 
         linha = trata_dados_linha(list(linha))
 
+        # Gambiarra temporária? para lidar com campos vazios consumidos pela biblioteca rows (a lista é menor caso faltem dados)
+        volta = 3  # Sem data de encerramento nem data de óbito
+        if len(linha) == 33:  # Com data de encerramento, sem data de óbito
+            volta = 2
+            self.dataEncerramento = linha[5]
+        elif len(linha) == 34:  # Com data de encerramento e data de óbito
+            volta = 1
+            self.dataObito = linha[6]
+
         self.dataNotificacao = linha[0]
         self.dataCadastro = linha[1]
         self.dataDiagnostico = linha[2]
         self.dataColeta_RT_PCR = linha[3]
         self.dataColetaTesteRapido = linha[4]
-        self.dataEncerramento = linha[5]
-        self.dataObito = linha[6]
-        self.classificacao = linha[7]
-        self.evolucao = linha[8]
-        self.criterioConfirmacao = linha[9]
-        self.statusNotificacao = linha[10]
-        self.municipio = linha[11]
-        self.bairro = linha[12]
-        self.faixaEtaria = linha[13]
-        self.sexo = linha[14]
-        self.racaCor = linha[15]
-        self.escolaridade = linha[16]
+        self.classificacao = linha[7 - volta]
+        self.evolucao = linha[8 - volta]
+        self.criterioConfirmacao = linha[9 - volta]
+        self.statusNotificacao = linha[10 - volta]
+        self.municipio = linha[11 - volta]
+        self.bairro = linha[12 - volta]
+        self.faixaEtaria = linha[13 - volta]
+        self.sexo = linha[14 - volta]
+        self.racaCor = linha[15 - volta]
+        self.escolaridade = linha[16 - volta]
         self.sintomas = {
-            "febre": linha[17],
-            "dificuldadeRespiratoria": linha[18],
-            "tosse": linha[19],
-            "coriza": linha[20],
-            "dorGarganta": linha[21],
-            "diarreia": linha[22],
-            "cefaleia": linha[23],
+            "febre": linha[17 - volta],
+            "dificuldadeRespiratoria": linha[18 - volta],
+            "tosse": linha[19 - volta],
+            "coriza": linha[20 - volta],
+            "dorGarganta": linha[21 - volta],
+            "diarreia": linha[22 - volta],
+            "cefaleia": linha[23 - volta],
         }
         self.comorbidades = {
-            "comorbidadePulmao": linha[24],
-            "comorbidadeCardio": linha[25],
-            "comorbidadeRenal": linha[26],
-            "comorbidadeDiabetes": linha[27],
-            "comorbidadeTabagismo": linha[28],
-            "comorbidadeObesidade": linha[29]
+            "comorbidadePulmao": linha[24 - volta],
+            "comorbidadeCardio": linha[25 - volta],
+            "comorbidadeRenal": linha[26 - volta],
+            "comorbidadeDiabetes": linha[27 - volta],
+            "comorbidadeTabagismo": linha[28 - volta],
+            "comorbidadeObesidade": linha[29 - volta]
         }
-        self.ficouInternado = linha[30]
-        self.viagemBrasil = linha[31]
-        self.viagemInternacional = linha[32]
-        self.profissionalSaude = linha[33]
+        self.ficouInternado = linha[30 - volta]
+        self.viagemBrasil = linha[31 - volta]
+        self.viagemInternacional = linha[32 - volta]
+        self.profissionalSaude = linha[33 - volta]
 
         return self
 

@@ -16,7 +16,6 @@ def test_success():
 
 
 def test_fail():
-    return True
     with pytest.raises(IndexError):
         linha = []
         trata_dados_linha(linha)

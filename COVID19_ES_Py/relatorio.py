@@ -12,7 +12,7 @@ import requests
 import rows
 import arrow
 
-from .utils import MUNICIPIOS, remove_caracteres_especiais, trata_dados_linha
+from .utils import MUNICIPIOS, remove_caracteres_especiais, trata_dados_linha, trata_dados_linha_deprecated
 from .exceptions import RelatorioError
 
 # URL direta para o arquivo csv dos microdados do painel PowerBI
@@ -59,6 +59,132 @@ class Municipio():
 
     def __repr__(self):  # pragma: no cover
         return f"{{'casosConfirmados': {self.casosConfirmados}, 'obitos': {self.obitos}}}"
+
+
+class CasoDeprecated():
+    """
+    Um objeto `CasoDeprecated` é capaz de abstrair o registro de um caso lido do csv no formato antigo (antes de 02/07/2020).
+    Parameters
+    ----------
+    dados : ``iterable``
+        Um iterável com os dados do caso.
+    Attributes
+    ----------
+    data : Objeto `arrow`
+        A data de registro do caso.
+    classificacao : ``str``
+        A classificação da ocorrência de COVID-19 no paciente.
+    evolucao : ``str`` ou ``None``
+        A evolução da situação do paciente ou None se não for informada.
+    criterioConfirmacao : ``str`` ou ``None``
+        O critério usado para a classificação do caso ou None se não for informada.
+    statusNotificacao : ``str``
+        O estado atual do caso.
+    municipio : ``str``
+        O município de origem do paciente.
+    bairro : ``str`` ou ``None``
+        O bairro de origem do paciente.
+    faixaEtaria : ``str``
+        A faixa etária do paciente.
+    sexo : ``str``
+        O sexo do paciente.
+    racaCor : ``str`` ou ``None``
+        A raça/cor do paciente ou None se não for informada.
+    escolaridade : ``str``
+        O grau de escolaridade do paciente ou ``None`` se não for informada.
+    sintomas : ``dict`` : ``bool``
+        Os sintomas apresentados pelo paciente.
+    comorbidades : ``dict`` : ``bool``
+        As comorbidades apresentadas pelo paciente.
+    ficouInternado : ``bool`` ou ``None``
+        Se o paciente ficou internado ou não.
+    viagemBrasil : ``bool`` ou ``None``
+        Se o paciente realizou viagem nacional ou não.
+    viagemInternacional : ``bool`` ou ``None``
+        Se o paciente realizou viagem internacional ou não.
+    """
+
+    def __init__(self,
+                 dados=None,
+                 data=None,
+                 classificacao=None,
+                 evolucao=None,
+                 criterioConfirmacao=None,
+                 statusNotificacao=None,
+                 municipio=None,
+                 bairro=None,
+                 faixaEtaria=None,
+                 sexo=None,
+                 racaCor=None,
+                 escolaridade=None,
+                 sintomas=None,
+                 comorbidades=None,
+                 ficouInternado=None,
+                 viagemBrasil=None,
+                 viagemInternacional=None):
+        if dados:
+            self.carrega_dados_linha(dados)
+        else:
+            self.data = data
+            self.classificacao = classificacao
+            self.evolucao = evolucao
+            self.criterioConfirmacao = criterioConfirmacao
+            self.statusNotificacao = statusNotificacao
+            self.municipio = municipio
+            self.bairro = bairro
+            self.faixaEtaria = faixaEtaria
+            self.sexo = sexo
+            self.racaCor = racaCor
+            self.escolaridade = escolaridade
+            self.sintomas = sintomas
+            self.comorbidades = comorbidades
+            self.ficouInternado = ficouInternado
+            self.viagemBrasil = viagemBrasil
+            self.viagemInternacional = viagemInternacional
+
+    def __str__(self):  # pragma: no cover
+        return f"Caso de {self.data} - {self.classificacao} em {self.municipio}"  # pragma: no cover
+
+    def carrega_dados_linha(self, linha):
+        """Carrega os dados presentes em uma linha do csv para o objeto Caso.
+        Retorna o objeto Caso preenchido.
+        """
+
+        linha = trata_dados_linha_deprecated(list(linha))
+
+        self.data = linha[0]
+        self.classificacao = linha[1]
+        self.evolucao = linha[2]
+        self.criterioConfirmacao = linha[3]
+        self.statusNotificacao = linha[4]
+        self.municipio = linha[5]
+        self.bairro = linha[6]
+        self.faixaEtaria = linha[7]
+        self.sexo = linha[8]
+        self.racaCor = linha[9]
+        self.escolaridade = linha[10]
+        self.sintomas = {
+            "febre": linha[11],
+            "dificuldadeRespiratoria": linha[12],
+            "tosse": linha[13],
+            "coriza": linha[14],
+            "dorGarganta": linha[15],
+            "diarreia": linha[16],
+            "cefaleia": linha[17],
+        }
+        self.comorbidades = {
+            "comorbidadePulmao": linha[18],
+            "comorbidadeCardio": linha[19],
+            "comorbidadeRenal": linha[20],
+            "comorbidadeDiabetes": linha[21],
+            "comorbidadeTabagismo": linha[22],
+            "comorbidadeObesidade": linha[23]
+        }
+        self.ficouInternado = linha[24]
+        self.viagemBrasil = linha[25]
+        self.viagemInternacional = linha[26]
+
+        return self
 
 
 class Caso():
@@ -288,7 +414,7 @@ class Relatorio():
             return self.casosMunicipios[stringMunicipioTratada]
         except KeyError:
             raise RelatorioError(
-                f"O município '{municipio}' não foi encontrado no relatório. Pode ter ocorrido um erro de digitação ou o município não registrou casos de COVID-19.")
+                f"O município '{municipio}' não foi encontrado no relatório. Pode ter ocorrido um erro de digitação ou o município não é do Espírito Santo.")
 
     def popula_relatorio(self):
         """Preenche o Relatorio com as informações presentes em self.linhasRelatorio e retorna uma cópia do Relatorio."""
@@ -301,11 +427,15 @@ class Relatorio():
         self.importadosOuIndefinidos['obitos'] = 0
 
         for linha in self.linhasRelatorio:
-            caso = Caso(linha)
+            if arrow.get(Path(self.csv).stem, ["DD-MM-YYYY", "DD_MM_YYYY"]) <= arrow.get('01-07-2020', ["DD-MM-YYYY", "DD_MM_YYYY"]):
+                caso = CasoDeprecated(linha)
+            else:
+                caso = Caso(linha)
+
             if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
                 if self.casosMunicipios[caso.municipio].casosConfirmados == 0:
                     self.nMunicipiosInfectados += 1
-                if (caso.evolucao == "ï¿½bito pelo COVID-19"):
+                if (caso.evolucao == "Óbito pelo COVID-19"):
                     self.totalGeral['obitos'] += 1
                     self.casosMunicipios[caso.municipio].obitos += 1
                 self.casosMunicipios[caso.municipio].casos.append(caso)

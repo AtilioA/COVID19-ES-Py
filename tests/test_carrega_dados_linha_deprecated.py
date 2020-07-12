@@ -1,11 +1,11 @@
 import arrow
 import pytest
 
-from COVID19_ES_Py.relatorio import Caso
+from COVID19_ES_Py.relatorio import CasoDeprecated
 
 
 def test_success():
-    caso = Caso()
+    caso = CasoDeprecated()
     caso.carrega_dados_linha(["24/04/2020", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
                               "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27"])
     assert caso.data == arrow.get("24/04/2020", "DD/MM/YYYY")
@@ -40,7 +40,7 @@ def test_success():
     assert caso.viagemBrasil == None
     assert caso.viagemInternacional == None
 
-    caso = Caso()
+    caso = CasoDeprecated()
     linha = ["27/04/2020", "Confirmados", "-", "Laboratorial", "Em Aberto", "SERRA", "PARQUE DAS GAIVOTAS", "60 a 69 anos", "M",
              "Branca", "Analfabeto", "Não", "Sim", "Não", "Não", "Não", "Não", "Não", "Não", "Sim", "Não", "Sim", "Sim", "Não", "-", "-", "-"]
     caso.carrega_dados_linha(linha)
@@ -82,7 +82,7 @@ def test_success():
 
 
 def test_fail():
-    caso = Caso()
+    caso = CasoDeprecated()
     with pytest.raises(IndexError):
         caso.carrega_dados_linha([])
     with pytest.raises(IndexError):

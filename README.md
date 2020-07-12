@@ -117,7 +117,7 @@ relatorio.busca_casos_municipio("AFONSO CLAUDIO")
 0 óbitos."
 
 relatorio.busca_casos_municipio("arapiraca")
->>> exceptions.RelatorioError: O município "arapiraca" não foi encontrado no relatório. Pode ter ocorrido um erro de digitação ou o município não registrou casos de COVID-19.
+>>> exceptions.RelatorioError: O município "arapiraca" não foi encontrado no relatório. Pode ter ocorrido um erro de digitação ou o município não é do Espírito Santo.
 ```
 
 Atributos da classe `Município`:

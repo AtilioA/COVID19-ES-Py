@@ -62,6 +62,8 @@ def relatorio_para_tabela(path, data=None, caminhoCSV=None):
             f.write(f"{MUNICIPIOS_SEM_TRATAMENTO[i]}|{casosConfirmados}|{obitos}\n")
         print(f"Tabela do relatório salva em {arquivoCriado}.")
 
+    return relatorio
+
 
 if __name__ == "__main__":
-    relatorio_para_tabela(".", caminhoCSV=f"{END.format('DD-MM-YYYY')}.csv")
+    relatorio_para_tabela(".", caminhoCSV=f"16-07-2020.csv")

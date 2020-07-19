@@ -133,6 +133,3 @@ ignore/
 *ignore_me*
 *.csv
 !tests/relatorios_passados/*
-relatorio_para_csv.py
-automatiza_subida_dados_brasil_io.py
-gera_ES.py

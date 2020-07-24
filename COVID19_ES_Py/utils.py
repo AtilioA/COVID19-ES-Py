@@ -128,8 +128,8 @@ def trata_dados_linha(linha):
         try:
             linha[i] = arrow.get(linha[i], ["YYYY/MM/DD", "YYYY-MM-DD",
                                             "YYYY_MM_DD", "YYYY.MM.DD", "YYYYMMDD"])
-        except arrow.ParserError:
-            pass
+        except:
+            linha[i] = None
 
     for i in range(5, 17):
         if linha[i] in ["Ignorado", "-"]:

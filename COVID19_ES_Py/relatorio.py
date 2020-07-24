@@ -315,6 +315,7 @@ class Caso():
         elif len(linha) == 34:  # Com data de encerramento e data de óbito
             volta = 1
             self.dataObito = linha[6]
+        volta = 0
 
         self.dataNotificacao = linha[0]
         self.dataCadastro = linha[1]

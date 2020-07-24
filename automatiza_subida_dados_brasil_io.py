@@ -63,14 +63,15 @@ def automatiza_subida():
 
     filename = str(Path(f"{AGORA.format('DD-MM-YYYY')}.csv"))
     newFilenameAndPath = os.path.join(os.getcwd(), filename)
-    shutil.move(fileOriginalPath, newFilenameAndPath)
+    shutil.copy(fileOriginalPath, newFilenameAndPath)
 
-    print("Planilha da SESA movida. Gerando relatório...")
+    print("Planilha da SESA copiada. Gerando relatório...")
 
     relatorio = relatorio_para_tabela(".", caminhoCSV=f"{AGORA.format('DD-MM-YYYY')}.csv")
 
     relatorioPath = os.path.abspath(f"ES_{AGORA.format('DD-MM')}.csv")
 
+    os.remove(fileOriginalPath)
     print("Copiando resultado para o Desktop...")
     shutil.copy(relatorioPath, desktopPath)
 

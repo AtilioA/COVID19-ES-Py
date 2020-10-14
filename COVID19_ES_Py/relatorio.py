@@ -309,12 +309,12 @@ class Caso():
 
         # Gambiarra temporária? para lidar com campos vazios consumidos pela biblioteca rows (a lista é menor caso faltem dados)
         volta = 3  # Sem data de encerramento nem data de óbito
-        if len(linha) == 33:  # Com data de encerramento, sem data de óbito
+        if len(linha) == 41:  # Com data de encerramento, sem data de óbito
             volta = 2
-            self.dataEncerramento = linha[5]
-        elif len(linha) == 34:  # Com data de encerramento e data de óbito
+            self.dataEncerramento = linha[7]
+        elif len(linha) == 42:  # Com data de encerramento e data de óbito
             volta = 1
-            self.dataObito = linha[6]
+            self.dataObito = linha[8]
         volta = 0
 
         self.dataNotificacao = linha[0]
@@ -322,37 +322,46 @@ class Caso():
         self.dataDiagnostico = linha[2]
         self.dataColeta_RT_PCR = linha[3]
         self.dataColetaTesteRapido = linha[4]
-        self.classificacao = linha[7 - volta]
-        self.evolucao = linha[8 - volta]
-        self.criterioConfirmacao = linha[9 - volta]
-        self.statusNotificacao = linha[10 - volta]
-        self.municipio = linha[11 - volta]
-        self.bairro = linha[12 - volta]
-        self.faixaEtaria = linha[13 - volta]
-        self.sexo = linha[14 - volta]
-        self.racaCor = linha[15 - volta]
-        self.escolaridade = linha[16 - volta]
+        self.dataColetaSorologia = linha[5]
+        self.dataColetaSorologiaIGG = linha[6]
+        self.classificacao = linha[9 - volta]
+        self.evolucao = linha[10 - volta]
+        self.criterioConfirmacao = linha[11 - volta]
+        self.statusNotificacao = linha[12 - volta]
+        self.municipio = linha[13 - volta]
+        self.bairro = linha[14 - volta]
+        self.faixaEtaria = linha[15 - volta]
+        self.sexo = linha[16 - volta]
+        self.racaCor = linha[17 - volta]
+        self.escolaridade = linha[18 - volta]
         self.sintomas = {
-            "febre": linha[17 - volta],
-            "dificuldadeRespiratoria": linha[18 - volta],
-            "tosse": linha[19 - volta],
-            "coriza": linha[20 - volta],
-            "dorGarganta": linha[21 - volta],
-            "diarreia": linha[22 - volta],
-            "cefaleia": linha[23 - volta],
+            "febre": linha[19 - volta],
+            "dificuldadeRespiratoria": linha[20 - volta],
+            "tosse": linha[21 - volta],
+            "coriza": linha[22 - volta],
+            "dorGarganta": linha[23 - volta],
+            "diarreia": linha[24 - volta],
+            "cefaleia": linha[25 - volta],
         }
         self.comorbidades = {
-            "comorbidadePulmao": linha[24 - volta],
-            "comorbidadeCardio": linha[25 - volta],
-            "comorbidadeRenal": linha[26 - volta],
-            "comorbidadeDiabetes": linha[27 - volta],
-            "comorbidadeTabagismo": linha[28 - volta],
-            "comorbidadeObesidade": linha[29 - volta]
+            "comorbidadePulmao": linha[26 - volta],
+            "comorbidadeCardio": linha[27 - volta],
+            "comorbidadeRenal": linha[28 - volta],
+            "comorbidadeDiabetes": linha[29 - volta],
+            "comorbidadeTabagismo": linha[30 - volta],
+            "comorbidadeObesidade": linha[31 - volta]
         }
-        self.ficouInternado = linha[30 - volta]
-        self.viagemBrasil = linha[31 - volta]
-        self.viagemInternacional = linha[32 - volta]
-        self.profissionalSaude = linha[33 - volta]
+        self.ficouInternado = linha[32 - volta]
+        self.viagemBrasil = linha[33 - volta]
+        self.viagemInternacional = linha[34 - volta]
+        self.profissionalSaude = linha[35 - volta]
+        self.possuiDeficiencia = linha[36 - volta]
+        self.moradorDeRua = linha[37 - volta]
+        self.resultadoRT_PCR = linha[38 - volta]
+        self.resultadoTesteRapido = linha[39 - volta]
+        self.resultadoSorologia = linha[40 - volta]
+        self.resultadoSorologia_IGG = linha[41 - volta]
+
 
         return self
 

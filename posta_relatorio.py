@@ -24,11 +24,13 @@ updater = Updater(token=token, use_context=True)
 # bot = telegram.Bot(token)
 
 # Parse cli arguments (download data and post on telegram)
-parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument("--download", "-d", action='store_true',
-    help="download covid-19 data.")
-parser.add_argument("--telegram", "-t", action='store_true',
-    help="post results on telegram.")
+parser = argparse.ArgumentParser(description="Process some integers.")
+parser.add_argument(
+    "--download", "-d", action="store_true", help="download covid-19 data."
+)
+parser.add_argument(
+    "--telegram", "-t", action="store_true", help="post results on telegram."
+)
 args = parser.parse_args()
 shouldDownload = args.download
 shouldPostTelegram = args.telegram
@@ -37,8 +39,8 @@ shouldPostTelegram = args.telegram
 def constroi_mensagem_relatorio(relatorio, confirmadosOntem, obitosOntem):
     data = arrow.now("America/Sao_Paulo").format("DD/MM/YYYY")
 
-    diffConfirmados = relatorio.totalGeral['casosConfirmados'] - confirmadosOntem
-    diffMortes = relatorio.totalGeral['obitos'] - obitosOntem
+    diffConfirmados = relatorio.totalGeral["casosConfirmados"] - confirmadosOntem
+    diffMortes = relatorio.totalGeral["obitos"] - obitosOntem
 
     stringRelatorio = f"""*RELATÓRIO DE {data}*
 
@@ -68,17 +70,25 @@ def envia_relatorio():
 
     if shouldPostTelegram:
         stringRelatorio = constroi_mensagem_relatorio(
-            ultimoRelatorio, confirmadosOntem, obitosOntem)
+            ultimoRelatorio, confirmadosOntem, obitosOntem
+        )
 
-        updater.bot.send_message(chat_id="@BoletimCOVID19ES", text=stringRelatorio,
-                                parse_mode="markdown", disable_web_page_preview=True)
-        updater.bot.send_message(chat_id="-1001308085632", text=stringRelatorio,
-                                parse_mode="markdown", disable_web_page_preview=True)
+        updater.bot.send_message(
+            chat_id="@BoletimCOVID19ES",
+            text=stringRelatorio,
+            parse_mode="markdown",
+            disable_web_page_preview=True,
+        )
+        updater.bot.send_message(
+            chat_id="-1001308085632",
+            text=stringRelatorio,
+            parse_mode="markdown",
+            disable_web_page_preview=True,
+        )
 
         dadosPath = Path(f"C:\\Users\\Casa\\Desktop\\ES_{dataHoje.format('DD-MM')}.csv")
-        updater.bot.send_document(chat_id='467672701', document=open(dadosPath, 'rb'))
+        updater.bot.send_document(chat_id="467672701", document=open(dadosPath, "rb"))
 
 
 if __name__ == "__main__":
     envia_relatorio()
-    os.kill(os.getppid(), signal.SIGHUP)

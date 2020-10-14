@@ -12,7 +12,7 @@ import arrow
 import pyperclip
 
 
-NOW = arrow.now('America/Sao_Paulo')
+NOW = arrow.now("America/Sao_Paulo")
 
 
 def relatorio_para_csv(path, data=None, caminhoCSV=None):
@@ -41,12 +41,16 @@ def relatorio_para_csv(path, data=None, caminhoCSV=None):
     print(f"Total geral: {totalGeral}")
 
     with open(arquivoCriado, "w+", encoding="utf-8") as f:
+        f.write(f"municipio|confirmados|mortes\n")
         f.write(
-            f"municipio|confirmados|mortes\n")
-        f.write(f"TOTAL NO ESTADO|{totalGeral['casosConfirmados']}|{totalGeral['obitos']}\n")
+            f"TOTAL NO ESTADO|{totalGeral['casosConfirmados']}|{totalGeral['obitos']}\n"
+        )
         f.write(
-            f"Importados/Indefinidos|{relatorio.importadosOuIndefinidos['casosConfirmados']}|{relatorio.importadosOuIndefinidos['obitos']}\n")
-        for i, (municipio, objMunicipio) in enumerate(sorted(relatorio.casosMunicipios.items())):
+            f"Importados/Indefinidos|{relatorio.importadosOuIndefinidos['casosConfirmados']}|{relatorio.importadosOuIndefinidos['obitos']}\n"
+        )
+        for i, (municipio, objMunicipio) in enumerate(
+            sorted(relatorio.casosMunicipios.items())
+        ):
             casosConfirmados = objMunicipio.casosConfirmados
             obitos = objMunicipio.obitos
             f.write(f"{MUNICIPIOS_SEM_TRATAMENTO[i]}|{casosConfirmados}|{obitos}\n")
@@ -56,17 +60,19 @@ def relatorio_para_csv(path, data=None, caminhoCSV=None):
 
 
 def automatiza_subida(download=False):
-    AGORA = arrow.now('America/Sao_Paulo')
+    AGORA = arrow.now("America/Sao_Paulo")
 
     print(f"""Criando arquivo {Path(f"ES_{AGORA.format('DD-MM-YYYY')}.csv")} ...\n""")
 
     if download:
         print("Baixando MICRODADOS.csv...")
-        wget.download("https://bi.static.es.gov.br/covid19/MICRODADOS.csv", '/home/atilioa/Downloads')
+        wget.download(
+            "https://bi.static.es.gov.br/covid19/MICRODADOS.csv",
+            "/home/atilioa/Downloads",
+        )
 
     fileOriginalPath = os.path.abspath("/home/atilioa/Downloads/MICRODADOS.csv")
     desktopPath = os.path.abspath("/home/atilioa/Área de Trabalho/")
-
 
     filename = str(Path(f"{AGORA.format('DD-MM-YYYY')}.csv"))
     newFilenameAndPath = os.path.join(os.getcwd(), filename)
@@ -75,13 +81,17 @@ def automatiza_subida(download=False):
         shutil.copy(fileOriginalPath, newFilenameAndPath)
     except FileNotFoundError:
         print("Baixando MICRODADOS.csv...")
-        wget.download("https://bi.static.es.gov.br/covid19/MICRODADOS.csv", '/home/atilioa/Downloads')
+        wget.download(
+            "https://bi.static.es.gov.br/covid19/MICRODADOS.csv",
+            "/home/atilioa/Downloads",
+        )
         shutil.copy(fileOriginalPath, newFilenameAndPath)
-
 
     print("Planilha da SESA copiada. Gerando relatório...")
 
-    relatorio = relatorio_para_tabela(".", caminhoCSV=f"{AGORA.format('DD-MM-YYYY')}.csv")
+    relatorio = relatorio_para_tabela(
+        ".", caminhoCSV=f"{AGORA.format('DD-MM-YYYY')}.csv"
+    )
 
     relatorioFile = os.path.abspath(f"ES_{AGORA.format('DD-MM')}.csv")
 
@@ -89,10 +99,10 @@ def automatiza_subida(download=False):
     print("Copiando resultado para o Desktop...")
     shutil.copy(relatorioFile, desktopPath)
 
-    pyperclip.copy('https://coronavirus.es.gov.br/painel-covid-19-es')
+    pyperclip.copy("https://coronavirus.es.gov.br/painel-covid-19-es")
     print(f"'{pyperclip.paste()}' copiado para a área de transferência.")
 
-    addSpreadsheetURL = 'https://brasil.io/admin/covid19/statespreadsheet/add/'
+    addSpreadsheetURL = "https://brasil.io/admin/covid19/statespreadsheet/add/"
 
     webbrowser.open_new(addSpreadsheetURL)
 

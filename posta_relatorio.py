@@ -34,6 +34,7 @@ parser.add_argument(
 args = parser.parse_args()
 shouldDownload = args.download
 shouldPostTelegram = args.telegram
+# print(shouldDownload, shouldPostTelegram)
 
 
 def constroi_mensagem_relatorio(relatorio, confirmadosOntem, obitosOntem):
@@ -59,6 +60,7 @@ def envia_relatorio():
     dataHoje = arrow.utcnow().to("Brazil/East")
     dataOntem = dataHoje.shift(days=-1)
 
+    print(f"Comparando com: ES_{dataOntem.format('DD-MM')}.csv")
     with open(f"ES_{dataOntem.format('DD-MM')}.csv", encoding="utf-8") as dadosOntem:
         totalNoEstado = [next(dadosOntem) for x in range(2)]
     totalNoEstado = totalNoEstado[1].split("|")[1:]
@@ -66,7 +68,7 @@ def envia_relatorio():
     confirmadosOntem = int(totalNoEstado[0])
     obitosOntem = int(totalNoEstado[1])
 
-    ultimoRelatorio = automatiza_subida(shouldDownload)
+    ultimoRelatorio = automatiza_subida(download=shouldDownload)
 
     if shouldPostTelegram:
         stringRelatorio = constroi_mensagem_relatorio(
@@ -80,7 +82,7 @@ def envia_relatorio():
             disable_web_page_preview=True,
         )
         updater.bot.send_message(
-            chat_id="-1001308085632",
+            chat_id="-1001361751085",
             text=stringRelatorio,
             parse_mode="markdown",
             disable_web_page_preview=True,

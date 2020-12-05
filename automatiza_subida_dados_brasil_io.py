@@ -15,50 +15,6 @@ import pyperclip
 NOW = arrow.now("America/Sao_Paulo")
 
 
-def relatorio_para_csv(path, data=None, caminhoCSV=None):
-    if data and caminhoCSV:
-        leitor = LeitorRelatorio(caminhoCSV)
-        relatorio = leitor.filtra_casos_ate_dia(data)
-        dataRelatorio = arrow.get(data, "DD/MM/YYYY").format("DD_MM")
-    elif data:
-        dataRelatorio = NOW.format("DD_MM")
-        relatorio = leitor.filtra_casos_ate_dia(dataRelatorio)
-
-    if caminhoCSV:
-        print(f"Lendo arquivo {os.path.basename(caminhoCSV)}")
-        leitor = LeitorRelatorio(caminhoCSV)
-        relatorio = leitor.relatorio
-        arquivoCriado = Path(f"{path}/ES_{os.path.basename(caminhoCSV)[:5]}.csv")
-    else:
-        leitor = LeitorRelatorio()
-        relatorio = leitor.carrega_ultimo_relatorio()
-        arquivoCriado = Path(f"{path}/ES_{dataRelatorio}.csv")
-
-    relatorio.popula_relatorio()
-
-    totalGeral = relatorio.totalGeral
-    print(f"Municípios infectados: {relatorio.nMunicipiosInfectados}")
-    print(f"Total geral: {totalGeral}")
-
-    with open(arquivoCriado, "w+", encoding="utf-8") as f:
-        f.write(f"municipio|confirmados|mortes\n")
-        f.write(
-            f"TOTAL NO ESTADO|{totalGeral['casosConfirmados']}|{totalGeral['obitos']}\n"
-        )
-        f.write(
-            f"Importados/Indefinidos|{relatorio.importadosOuIndefinidos['casosConfirmados']}|{relatorio.importadosOuIndefinidos['obitos']}\n"
-        )
-        for i, (municipio, objMunicipio) in enumerate(
-            sorted(relatorio.casosMunicipios.items())
-        ):
-            casosConfirmados = objMunicipio.casosConfirmados
-            obitos = objMunicipio.obitos
-            f.write(f"{MUNICIPIOS_SEM_TRATAMENTO[i]}|{casosConfirmados}|{obitos}\n")
-        print(f"Tabela do relatório salva em {arquivoCriado}.")
-
-    return relatorio
-
-
 def automatiza_subida(download=False):
     AGORA = arrow.now("America/Sao_Paulo")
 

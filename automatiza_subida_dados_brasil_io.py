@@ -1,9 +1,8 @@
 #!/usr/bin/python3.8
 
-from relatorio_para_csv import relatorio_para_tabela
-from COVID19_ES_Py import LeitorRelatorio
 import os
 from pathlib import Path
+import argparse
 import shutil
 import webbrowser
 import wget
@@ -11,49 +10,80 @@ import wget
 import arrow
 import pyperclip
 
+from relatorio_para_csv import relatorio_para_tabela
 
-NOW = arrow.now("America/Sao_Paulo")
+AGORA = arrow.now("America/Sao_Paulo")
+MICRODADOS_URL = "https://bi.static.es.gov.br/covid19/MICRODADOS.csv"
+MICRODADOS_PATH = "/home/atilioa/Downloads"
+MICRODADOS_FILENAME = f"MICRODADOS_ES_{AGORA.format('DD_MM_YYYY')}"
+OUTPUT_PATH = "/home/atilioa/Área de Trabalho/"
+
+
+# Parse cli arguments
+parser = argparse.ArgumentParser(description="Process args.")
+
+
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ("yes", "true", "t", "y", "1"):
+        return True
+    elif v.lower() in ("no", "false", "f", "n", "0"):
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Boolean value expected.")
+
+
+parser.add_argument(
+    "--download",
+    "-d",
+    type=str2bool,
+    nargs="?",
+    const=True,
+    default=True,
+    help="download covid-19 data.",
+)
 
 
 def automatiza_subida(download=False):
-    AGORA = arrow.now("America/Sao_Paulo")
 
-    print(f"""Criando arquivo {Path(f"ES_{AGORA.format('DD-MM-YYYY')}.csv")} ...\n""")
+    print(
+        f"""Criando arquivo {Path(f"{MICRODADOS_FILENAME}.csv")} (cópia dos microdados)...\n"""
+    )
 
+    downloadFilePath = f"{MICRODADOS_PATH}/{MICRODADOS_FILENAME}.csv"
     if download:
-        print("Baixando MICRODADOS.csv...")
+        print(f"Baixando {MICRODADOS_FILENAME}.csv...")
         wget.download(
-            "https://bi.static.es.gov.br/covid19/MICRODADOS.csv",
-            "/home/atilioa/Downloads",
+            MICRODADOS_URL, downloadFilePath,
         )
 
-    fileOriginalPath = os.path.abspath("/home/atilioa/Downloads/MICRODADOS.csv")
-    desktopPath = os.path.abspath("/home/atilioa/Área de Trabalho/")
+    outputPath = os.path.abspath(OUTPUT_PATH)
 
-    filename = str(Path(f"{AGORA.format('DD-MM-YYYY')}.csv"))
+    filename = str(Path(f"{MICRODADOS_FILENAME}.csv"))
     newFilenameAndPath = os.path.join(os.getcwd(), filename)
 
     try:
-        shutil.copy(fileOriginalPath, newFilenameAndPath)
+        shutil.copy(downloadFilePath, newFilenameAndPath)
     except FileNotFoundError:
-        print("Baixando MICRODADOS.csv...")
-        wget.download(
-            "https://bi.static.es.gov.br/covid19/MICRODADOS.csv",
-            "/home/atilioa/Downloads",
-        )
-        shutil.copy(fileOriginalPath, newFilenameAndPath)
+        try:
+            shutil.copy(downloadFilePath, f"{MICRODADOS_PATH}/MICRODADOS.csv")
+        except FileNotFoundError:
+            print(f"Baixando {MICRODADOS_FILENAME}.csv...")
+            wget.download(
+                MICRODADOS_URL, MICRODADOS_PATH,
+            )
+            shutil.copy(downloadFilePath, newFilenameAndPath)
 
     print("Planilha da SESA copiada. Gerando relatório...")
 
-    relatorio = relatorio_para_tabela(
-        ".", caminhoCSV=f"{AGORA.format('DD-MM-YYYY')}.csv"
-    )
+    relatorio = relatorio_para_tabela(".", caminhoCSV=f"{MICRODADOS_FILENAME}.csv")
 
-    relatorioFile = os.path.abspath(f"ES_{AGORA.format('DD-MM')}.csv")
+    relatorioFile = os.path.abspath(f"ES_{AGORA.format('DD-MM_YYYY')}.csv")
 
     os.remove(fileOriginalPath)
-    print("Copiando resultado para o Desktop...")
-    shutil.copy(relatorioFile, desktopPath)
+    print("Copiando resultado para pasta de output...")
+    shutil.copy(relatorioFile, outputPath)
 
     pyperclip.copy("https://coronavirus.es.gov.br/painel-covid-19-es")
     print(f"'{pyperclip.paste()}' copiado para a área de transferência.")
@@ -63,3 +93,10 @@ def automatiza_subida(download=False):
     webbrowser.open_new(addSpreadsheetURL)
 
     return relatorio
+
+
+if __name__ == "__main__":
+    args = parser.parse_args()
+    shouldDownload = args.download
+
+    ultimoRelatorio = automatiza_subida(download=shouldDownload)

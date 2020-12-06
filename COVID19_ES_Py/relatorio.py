@@ -12,7 +12,12 @@ import requests
 import rows
 import arrow
 
-from .utils import MUNICIPIOS, remove_caracteres_especiais, trata_dados_linha, trata_dados_linha_deprecated
+from .utils import (
+    MUNICIPIOS,
+    remove_caracteres_especiais,
+    trata_dados_linha,
+    trata_dados_linha_deprecated,
+)
 from .exceptions import RelatorioError
 
 # URL direta para o arquivo csv dos microdados do painel PowerBI
@@ -20,7 +25,7 @@ URL_RELATORIO_CSV = "https://bi.static.es.gov.br/covid19/MICRODADOS.csv"
 
 
 @total_ordering
-class Municipio():
+class Municipio:
     """
     Um objeto `Municipio` representa um município do estado do Espírito Santo.
 
@@ -49,19 +54,21 @@ class Municipio():
 
     # Objetos do tipo Municipio podem ser comparados alfabeticamente
     def __eq__(self, other):  # pragma: no cover
-        return (self.nome.lower() == other.nome.lower())
+        return self.nome.lower() == other.nome.lower()
 
     def __lt__(self, other):  # pragma: no cover
-        return (self.nome.lower() < other.nome.lower())
+        return self.nome.lower() < other.nome.lower()
 
     def __str__(self):  # pragma: no cover
         return f"Município {self.nome}:\n{self.casosConfirmados} casos confirmados.\n{self.obitos} óbitos."
 
     def __repr__(self):  # pragma: no cover
-        return f"{{'casosConfirmados': {self.casosConfirmados}, 'obitos': {self.obitos}}}"
+        return (
+            f"{{'casosConfirmados': {self.casosConfirmados}, 'obitos': {self.obitos}}}"
+        )
 
 
-class CasoDeprecated():
+class CasoDeprecated:
     """
     Um objeto `CasoDeprecated` é capaz de abstrair o registro de um caso lido do csv no formato antigo (antes de 02/07/2020).
     Parameters
@@ -104,24 +111,26 @@ class CasoDeprecated():
         Se o paciente realizou viagem internacional ou não.
     """
 
-    def __init__(self,
-                 dados=None,
-                 data=None,
-                 classificacao=None,
-                 evolucao=None,
-                 criterioConfirmacao=None,
-                 statusNotificacao=None,
-                 municipio=None,
-                 bairro=None,
-                 faixaEtaria=None,
-                 sexo=None,
-                 racaCor=None,
-                 escolaridade=None,
-                 sintomas=None,
-                 comorbidades=None,
-                 ficouInternado=None,
-                 viagemBrasil=None,
-                 viagemInternacional=None):
+    def __init__(
+        self,
+        dados=None,
+        data=None,
+        classificacao=None,
+        evolucao=None,
+        criterioConfirmacao=None,
+        statusNotificacao=None,
+        municipio=None,
+        bairro=None,
+        faixaEtaria=None,
+        sexo=None,
+        racaCor=None,
+        escolaridade=None,
+        sintomas=None,
+        comorbidades=None,
+        ficouInternado=None,
+        viagemBrasil=None,
+        viagemInternacional=None,
+    ):
         if dados:
             self.carrega_dados_linha(dados)
         else:
@@ -178,7 +187,7 @@ class CasoDeprecated():
             "comorbidadeRenal": linha[20],
             "comorbidadeDiabetes": linha[21],
             "comorbidadeTabagismo": linha[22],
-            "comorbidadeObesidade": linha[23]
+            "comorbidadeObesidade": linha[23],
         }
         self.ficouInternado = linha[24]
         self.viagemBrasil = linha[25]
@@ -187,7 +196,7 @@ class CasoDeprecated():
         return self
 
 
-class Caso():
+class Caso:
     """
     Um objeto `Caso` é capaz de abstrair o registro de um caso lido do csv.
 
@@ -246,31 +255,33 @@ class Caso():
         Se o paciente é profissional da saúde ou não.
     """
 
-    def __init__(self,
-                 dados=None,
-                 dataNotificacao=None,
-                 dataCadastro=None,
-                 dataDiagnostico=None,
-                 dataColeta_RT_PCR=None,
-                 dataColetaTesteRapido=None,
-                 dataEncerramento=None,
-                 dataObito=None,
-                 classificacao=None,
-                 evolucao=None,
-                 criterioConfirmacao=None,
-                 statusNotificacao=None,
-                 municipio=None,
-                 bairro=None,
-                 faixaEtaria=None,
-                 sexo=None,
-                 racaCor=None,
-                 escolaridade=None,
-                 sintomas=None,
-                 comorbidades=None,
-                 ficouInternado=None,
-                 viagemBrasil=None,
-                 viagemInternacional=None,
-                 profissionalSaude=None):
+    def __init__(
+        self,
+        dados=None,
+        dataNotificacao=None,
+        dataCadastro=None,
+        dataDiagnostico=None,
+        dataColeta_RT_PCR=None,
+        dataColetaTesteRapido=None,
+        dataEncerramento=None,
+        dataObito=None,
+        classificacao=None,
+        evolucao=None,
+        criterioConfirmacao=None,
+        statusNotificacao=None,
+        municipio=None,
+        bairro=None,
+        faixaEtaria=None,
+        sexo=None,
+        racaCor=None,
+        escolaridade=None,
+        sintomas=None,
+        comorbidades=None,
+        ficouInternado=None,
+        viagemBrasil=None,
+        viagemInternacional=None,
+        profissionalSaude=None,
+    ):
         if dados:
             self.carrega_dados_linha(dados)
         else:
@@ -349,7 +360,7 @@ class Caso():
             "comorbidadeRenal": linha[28 - volta],
             "comorbidadeDiabetes": linha[29 - volta],
             "comorbidadeTabagismo": linha[30 - volta],
-            "comorbidadeObesidade": linha[31 - volta]
+            "comorbidadeObesidade": linha[31 - volta],
         }
         self.ficouInternado = linha[32 - volta]
         self.viagemBrasil = linha[33 - volta]
@@ -362,11 +373,10 @@ class Caso():
         self.resultadoSorologia = linha[40 - volta]
         self.resultadoSorologia_IGG = linha[41 - volta]
 
-
         return self
 
 
-class Relatorio():
+class Relatorio:
     """
     Um objeto `Relatorio` é capaz de abstrair um relatório em csv emitido pelo painel PowerBI.
 
@@ -394,22 +404,16 @@ class Relatorio():
     def __init__(self, caminhoCSV=None):
         if caminhoCSV:
             self.csv = Path(caminhoCSV)
-            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding='Latin-1')
+            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding="Latin-1")
         else:
             self.csv = URL_RELATORIO_CSV
             self.linhasRelatorio = None
 
         self.casosMunicipios = {}
         self.inicializa_dicionario_municipios()
-        self.importadosOuIndefinidos = {
-            'casosConfirmados': 0,
-            'obitos': 0
-        }
+        self.importadosOuIndefinidos = {"casosConfirmados": 0, "obitos": 0}
 
-        self.totalGeral = {
-            'casosConfirmados': 0,
-            'obitos': 0
-        }
+        self.totalGeral = {"casosConfirmados": 0, "obitos": 0}
         self.nMunicipiosInfectados = 0
 
     def inicializa_dicionario_municipios(self):
@@ -436,26 +440,28 @@ class Relatorio():
         self.casos[municipio] : ``dict``
             O dicionário de casos registrados no município."""
 
-        stringMunicipioTratada = remove_caracteres_especiais(
-            municipio).upper().strip()
+        stringMunicipioTratada = remove_caracteres_especiais(municipio).upper().strip()
         try:
             return self.casosMunicipios[stringMunicipioTratada]
         except KeyError:
             raise RelatorioError(
-                f"O município '{municipio}' não foi encontrado no relatório. Pode ter ocorrido um erro de digitação ou o município não é do Espírito Santo.")
+                f"O município '{municipio}' não foi encontrado no relatório. Pode ter ocorrido um erro de digitação ou o município não é do Espírito Santo."
+            )
 
     def popula_relatorio(self):
         """Preenche o Relatorio com as informações presentes em self.linhasRelatorio e retorna uma cópia do Relatorio."""
 
-        self.totalGeral['casosConfirmados'] = 0
-        self.totalGeral['obitos'] = 0
+        self.totalGeral["casosConfirmados"] = 0
+        self.totalGeral["obitos"] = 0
         self.inicializa_dicionario_municipios()
         self.nMunicipiosInfectados = 0
-        self.importadosOuIndefinidos['casosConfirmados'] = 0
-        self.importadosOuIndefinidos['obitos'] = 0
+        self.importadosOuIndefinidos["casosConfirmados"] = 0
+        self.importadosOuIndefinidos["obitos"] = 0
 
         for linha in self.linhasRelatorio:
-            if arrow.get(Path(self.csv).stem, ["DD-MM-YYYY", "DD_MM_YYYY"]) <= arrow.get('01-07-2020', ["DD-MM-YYYY", "DD_MM_YYYY"]):
+            if arrow.get(
+                Path(self.csv).stem[14:], ["DD-MM-YYYY", "DD_MM_YYYY"]
+            ) <= arrow.get("01-07-2020", ["DD-MM-YYYY", "DD_MM_YYYY"]):
                 caso = CasoDeprecated(linha)
             else:
                 caso = Caso(linha)
@@ -464,25 +470,25 @@ class Relatorio():
                 if remove_caracteres_especiais(caso.municipio.upper()) in MUNICIPIOS:
                     if self.casosMunicipios[caso.municipio].casosConfirmados == 0:
                         self.nMunicipiosInfectados += 1
-                    if (caso.evolucao == "Óbito pelo COVID-19"):
-                        self.totalGeral['obitos'] += 1
+                    if caso.evolucao == "Óbito pelo COVID-19":
+                        self.totalGeral["obitos"] += 1
                         self.casosMunicipios[caso.municipio].obitos += 1
                     self.casosMunicipios[caso.municipio].casos.append(caso)
                     self.casosMunicipios[caso.municipio].casosConfirmados += 1
                 else:
-                    self.importadosOuIndefinidos['casosConfirmados'] += 1
-                    if (caso.evolucao == "Óbito pelo COVID-19"):
-                        self.totalGeral['obitos'] += 1
-                        self.importadosOuIndefinidos['obitos'] += 1
+                    self.importadosOuIndefinidos["casosConfirmados"] += 1
+                    if caso.evolucao == "Óbito pelo COVID-19":
+                        self.totalGeral["obitos"] += 1
+                        self.importadosOuIndefinidos["obitos"] += 1
 
-                self.totalGeral['casosConfirmados'] += 1
+                self.totalGeral["casosConfirmados"] += 1
         return copy.copy(self)
 
     def __str__(self):
         return f"Relatório do arquivo {self.csv}:\nTotal geral: {self.totalGeral}\n{self.nMunicipiosInfectados} municípios com casos confirmados."
 
 
-class LeitorRelatorio():
+class LeitorRelatorio:
     """
     Um objeto `LeitorRelatorio` é capaz de manipular relatórios emitidos pelo painel PowerBI.
 
@@ -506,7 +512,7 @@ class LeitorRelatorio():
         self.relatorio = Relatorio()
         if caminhoCSV:
             self.csv = Path(caminhoCSV)
-            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding='Latin-1')
+            self.linhasRelatorio = rows.import_from_csv(self.csv, encoding="Latin-1")
             self.relatorio.csv = self.csv
             self.relatorio.linhasRelatorio = self.linhasRelatorio
             self.relatorio.popula_relatorio()
@@ -518,7 +524,8 @@ class LeitorRelatorio():
 
         self.relatorio.csv = URL_RELATORIO_CSV
         self.linhasRelatorio = rows.import_from_csv(
-            BytesIO(requests.get(self.relatorio.csv).content), encoding='Latin-1')
+            BytesIO(requests.get(self.relatorio.csv).content), encoding="Latin-1"
+        )
         self.relatorio.linhasRelatorio = self.linhasRelatorio
 
         return self.relatorio.popula_relatorio()
@@ -539,22 +546,37 @@ class LeitorRelatorio():
             O Relatorio filtrado e preenchido com os registros até a data especificada.
         """
 
+        dataArrow = data
+
         if self.relatorio.linhasRelatorio:
-            dataArrow = arrow.get(
-                data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
-            )
             try:
                 self.relatorio.linhasRelatorio = [
-                    caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0], ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY", "YYYY-MM-DD"])
+                    caso
+                    for caso in self.linhasRelatorio[1:]
+                    if dataArrow
+                    >= arrow.get(
+                        caso[0],
+                        [
+                            "DD/MM/YYYY",
+                            "DD-MM-YYYY",
+                            "DD_MM_YYYY",
+                            "DD.MM.YYYY",
+                            "DDMMYYYY",
+                            "YYYY-MM-DD",
+                        ],
+                    )
                 ]
             except TypeError:
                 self.relatorio.linhasRelatorio = [
-                    caso for caso in self.linhasRelatorio[1:] if dataArrow >= arrow.get(caso[0])
+                    caso
+                    for caso in self.linhasRelatorio[1:]
+                    if dataArrow >= arrow.get(caso[0])
                 ]
             return self.relatorio.popula_relatorio()
         else:
             raise RelatorioError(
-                "Não é possível filtrar pois o relatório está vazio (use o método popula_relatorio() para preencher o relatório).")
+                "Não é possível filtrar pois o relatório está vazio (use o método popula_relatorio() para preencher o relatório)."
+            )
 
     def filtra_casos_no_dia(self, data):
         """Filtra relatório por casos no dia fornecido.
@@ -574,15 +596,29 @@ class LeitorRelatorio():
 
         if self.relatorio.linhasRelatorio:
             dataArrow = arrow.get(
-                data, ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"]
+                data,
+                ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"],
             )
             self.relatorio.linhasRelatorio = [
-                caso for caso in self.linhasRelatorio[1:] if dataArrow == arrow.get(caso[0], ["DD/MM/YYYY", "DD-MM-YYYY", "DD_MM_YYYY", "DD.MM.YYYY", "DDMMYYYY"])
+                caso
+                for caso in self.linhasRelatorio[1:]
+                if dataArrow
+                == arrow.get(
+                    caso[0],
+                    [
+                        "DD/MM/YYYY",
+                        "DD-MM-YYYY",
+                        "DD_MM_YYYY",
+                        "DD.MM.YYYY",
+                        "DDMMYYYY",
+                    ],
+                )
             ]
             return self.relatorio.popula_relatorio()
         else:
             raise RelatorioError(
-                "Não é possível filtrar pois o relatório está vazio (use o método popula_relatorio() para preencher o relatório).")
+                "Não é possível filtrar pois o relatório está vazio (use o método popula_relatorio() para preencher o relatório)."
+            )
 
     def __str__(self):  # pragma: no cover
         if self.csv:

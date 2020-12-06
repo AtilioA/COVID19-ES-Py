@@ -14,7 +14,7 @@ from relatorio_para_csv import relatorio_para_tabela
 
 AGORA = arrow.now("America/Sao_Paulo")
 MICRODADOS_URL = "https://bi.static.es.gov.br/covid19/MICRODADOS.csv"
-MICRODADOS_PATH = "/home/atilioa/Downloads"
+MICRODADOS_PATH = "/home/atilioa/Downloads"  # Editar
 MICRODADOS_FILENAME = f"MICRODADOS_ES_{AGORA.format('DD_MM_YYYY')}"
 OUTPUT_PATH = "output/"
 

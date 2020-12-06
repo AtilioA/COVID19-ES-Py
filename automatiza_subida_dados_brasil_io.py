@@ -16,7 +16,7 @@ AGORA = arrow.now("America/Sao_Paulo")
 MICRODADOS_URL = "https://bi.static.es.gov.br/covid19/MICRODADOS.csv"
 MICRODADOS_PATH = "/home/atilioa/Downloads"
 MICRODADOS_FILENAME = f"MICRODADOS_ES_{AGORA.format('DD_MM_YYYY')}"
-OUTPUT_PATH = "/home/atilioa/Área de Trabalho/"
+OUTPUT_PATH = "output/"
 
 
 # Parse cli arguments
@@ -61,7 +61,7 @@ def automatiza_subida(download=False):
     outputPath = os.path.abspath(OUTPUT_PATH)
 
     filename = str(Path(f"{MICRODADOS_FILENAME}.csv"))
-    newFilenameAndPath = os.path.join(os.getcwd(), filename)
+    newFilenameAndPath = os.path.join("MICRODADOS/", filename)
 
     try:
         shutil.copy(downloadFilePath, newFilenameAndPath)
@@ -77,11 +77,11 @@ def automatiza_subida(download=False):
 
     print("Planilha da SESA copiada. Gerando relatório...")
 
-    relatorio = relatorio_para_tabela(".", caminhoCSV=f"{MICRODADOS_FILENAME}.csv")
+    relatorio = relatorio_para_tabela(".", data=AGORA, caminhoCSV=newFilenameAndPath)
 
-    relatorioFile = os.path.abspath(f"ES_{AGORA.format('DD-MM_YYYY')}.csv")
+    relatorioFile = os.path.abspath(f"ES_{AGORA.format('DD_MM_YYYY')}.csv")
 
-    os.remove(fileOriginalPath)
+    os.remove(downloadFilePath)
     print("Copiando resultado para pasta de output...")
     shutil.copy(relatorioFile, outputPath)
 

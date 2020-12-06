@@ -86,7 +86,7 @@ MUNICIPIOS_SEM_TRATAMENTO = [
     "Vitória",
 ]
 
-START = arrow.get("2020-03-01")  # Início da planilha
+START = arrow.get("2020-03-01")  # Início dos dados
 END = arrow.now("America/Sao_Paulo")
 
 
@@ -95,16 +95,16 @@ def relatorio_para_tabela(path, data=None, caminhoCSV=None):
     if data and caminhoCSV:
         leitor = LeitorRelatorio(caminhoCSV)
         relatorio = leitor.filtra_casos_ate_dia(data)
-        dataRelatorio = arrow.get(data, "DD/MM/YYYY").format("DD_MM")
+        dataRelatorio = data.format("DD_MM_YYYY")
     elif data:
-        dataRelatorio = END.format("DD_MM")
+        dataRelatorio = END.format("DD_MM_YYYY")
         relatorio = leitor.filtra_casos_ate_dia(dataRelatorio)
 
     if caminhoCSV:
         print(f"Lendo arquivo {os.path.basename(caminhoCSV)}")
         leitor = LeitorRelatorio(caminhoCSV)
         relatorio = leitor.relatorio
-        arquivoCriado = Path(f"{path}/ES_{os.path.basename(caminhoCSV)[:5]}.csv")
+        arquivoCriado = Path(f"{path}/ES_{dataRelatorio}.csv")
     else:
         leitor = LeitorRelatorio()
         relatorio = leitor.carrega_ultimo_relatorio()

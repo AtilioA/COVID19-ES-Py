@@ -47,7 +47,7 @@ setup(
         "requests==2.23.0",
         "six==1.14.0",
         "soupsieve==2.0",
-        "urllib3==1.25.9",
+        "urllib3==1.26.5",
         "wcwidth==0.1.9",
         "wrapt==1.12.1",
         "zipp==3.1.0",
